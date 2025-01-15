@@ -8,4 +8,8 @@ import { Component } from "@angular/core";
 })
 export class DashboardPage {
   constructor() {}
+
+  onAddClick() {
+    console.log("clicked!");
+  }
 }

@@ -1,0 +1,29 @@
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* row distance */
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px; /* card distance */
+}
+
+ion-card {
+  flex: 1;
+}
+
+.fixed-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+ion-button {
+  --background: #3880ff;
+  --color: white;
+  --border-radius: 10px;
+}

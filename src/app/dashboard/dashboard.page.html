@@ -1,9 +1,44 @@
-<ion-content [fullscreen]="true">
-  <!--<ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="card-container">
+    <div class="row">
+      <ion-card color="primary">
+        <ion-card-header>
+          <ion-card-title>Weight</ion-card-title>
+        </ion-card-header>
 
-  <app-explore-container name="Dashboard page"></app-explore-container>-->
+        <ion-card-content> 57.0kg </ion-card-content>
+      </ion-card>
+
+      <ion-card color="secondary">
+        <ion-card-header>
+          <ion-card-title>Current BMI</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content> 20.20 </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  <div class="row">
+    <ion-card color="tertiary">
+      <ion-card-header>
+        <ion-card-title>Body Fat Estimation</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content> 23.5% </ion-card-content>
+    </ion-card>
+
+    <ion-card color="success">
+      <ion-card-header>
+        <ion-card-title>Status</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content> Normal </ion-card-content>
+    </ion-card>
+  </div>
+  <div class="fixed-button">
+    <ion-button (click)="onAddClick()">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Add
+    </ion-button>
+  </div>
 </ion-content>
