@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +8,13 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class DashboardPage {
-  constructor() {}
+  constructor(private router: Router) {}
 
   onAddClick() {
     console.log('clicked!');
+  }
+
+  navigateToBMIDetail() {
+    this.router.navigate(['/tabs/dashboard/bmi-detail']);
   }
 }

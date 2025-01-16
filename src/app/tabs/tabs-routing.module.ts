@@ -1,49 +1,44 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { TabsPage } from "./tabs.page";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
-    path: "tabs",
+    path: 'tabs',
     component: TabsPage,
     children: [
       {
-        path: "dashboard",
-        loadChildren: () =>
-          import("../dashboard/dashboard.module").then(
-            (m) => m.DashboardPageModule
-          ),
+        path: 'dashboard',
+        loadChildren: () => import('src/app/dashboard/dashboard.module').then((m) => m.DashboardPageModule),
       },
       {
-        path: "progress",
+        path: 'dashboard/bmi-detail',
         loadChildren: () =>
-          import("../progress/progress.module").then(
-            (m) => m.ProgressPageModule
-          ),
+          import('src/app/dashboard-details/bmi-detail/bmi-detail.module').then((m) => m.BmiDetailPageModule),
       },
       {
-        path: "history",
-        loadChildren: () =>
-          import("../history/history.module").then((m) => m.HistoryPageModule),
+        path: 'progress',
+        loadChildren: () => import('src/app/progress/progress.module').then((m) => m.ProgressPageModule),
       },
       {
-        path: "settings",
-        loadChildren: () =>
-          import("../settings/settings.module").then(
-            (m) => m.SettingsPageModule
-          ),
+        path: 'history',
+        loadChildren: () => import('src/app/history/history.module').then((m) => m.HistoryPageModule),
       },
       {
-        path: "",
-        redirectTo: "/tabs/dashboard",
-        pathMatch: "full",
+        path: 'settings',
+        loadChildren: () => import('src/app/settings/settings.module').then((m) => m.SettingsPageModule),
+      },
+      {
+        path: '',
+        redirectTo: '/tabs/dashboard',
+        pathMatch: 'full',
       },
     ],
   },
   {
-    path: "",
-    redirectTo: "/tabs/dashboard",
-    pathMatch: "full",
+    path: '',
+    redirectTo: '/tabs/dashboard',
+    pathMatch: 'full',
   },
 ];
 
