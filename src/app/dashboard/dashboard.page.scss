@@ -14,6 +14,13 @@ ion-card {
   flex: 1;
 }
 
+.card-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 .fixed-button {
   position: fixed;
   bottom: 20px;
@@ -26,4 +33,9 @@ ion-button {
   --background: #3880ff;
   --color: white;
   --border-radius: 10px;
+}
+
+ion-card-title,
+ion-card-content {
+  font-size: 1.4rem;
 }
