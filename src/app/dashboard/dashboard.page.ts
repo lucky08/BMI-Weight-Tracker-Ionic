@@ -1,15 +1,15 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-  selector: "app-dashboard",
-  templateUrl: "dashboard.page.html",
-  styleUrls: ["dashboard.page.scss"],
+  selector: 'app-dashboard',
+  templateUrl: 'dashboard.page.html',
+  styleUrls: ['dashboard.page.scss'],
   standalone: false,
 })
 export class DashboardPage {
   constructor() {}
 
   onAddClick() {
-    console.log("clicked!");
+    console.log('clicked!');
   }
 }
