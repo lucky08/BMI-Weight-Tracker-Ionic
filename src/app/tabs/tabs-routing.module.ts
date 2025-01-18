@@ -17,6 +17,13 @@ const routes: Routes = [
           import('src/app/dashboard-details/bmi-detail/bmi-detail.module').then((m) => m.BmiDetailPageModule),
       },
       {
+        path: 'dashboard/body-fat-percentage-detail',
+        loadChildren: () =>
+          import('src/app/dashboard-details/body-fat-percentage-detail/body-fat-percentage-detail.module').then(
+            (m) => m.BodyFatPercentageDetailPageModule,
+          ),
+      },
+      {
         path: 'progress',
         loadChildren: () => import('src/app/progress/progress.module').then((m) => m.ProgressPageModule),
       },

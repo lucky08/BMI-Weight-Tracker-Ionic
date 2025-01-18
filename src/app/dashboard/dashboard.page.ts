@@ -17,4 +17,8 @@ export class DashboardPage {
   navigateToBMIDetail() {
     this.router.navigate(['/tabs/dashboard/bmi-detail']);
   }
+
+  navigateToBodyFatPercentageDetail() {
+    this.router.navigate(['/tabs/dashboard/body-fat-percentage-detail']);
+  }
 }
