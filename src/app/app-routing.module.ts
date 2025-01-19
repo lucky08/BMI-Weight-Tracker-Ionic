@@ -6,6 +6,10 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then((m) => m.TabsPageModule),
   },
+  {
+    path: 'weight-date-modal',
+    loadChildren: () => import('./weight-date-modal/weight-date-modal.module').then((m) => m.WeightDateModalPageModule),
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],

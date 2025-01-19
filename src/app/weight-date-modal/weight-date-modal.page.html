@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add your weight</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="submitForm()">
+    <ion-item>
+      <ion-label position="stacked">Weight</ion-label>
+      <ion-input
+        type="number"
+        placeholder="Please input your weight"
+        [(ngModel)]="weight"
+        name="weight"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Select Date</ion-label>
+      <ion-datetime [presentation]="'date'" [(ngModel)]="selectedDate" name="selectedDate" required></ion-datetime>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="!weight || !selectedDate"> Submit </ion-button>
+  </form>
+</ion-content>
