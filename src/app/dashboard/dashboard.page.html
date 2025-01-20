@@ -1,7 +1,7 @@
 <ion-content>
   <div class="card-container">
     <div class="row">
-      <ion-card color="primary">
+      <ion-card color="primary" (click)="onAddWeight(true)">
         <ion-card-header>
           <ion-card-title>Weight</ion-card-title>
         </ion-card-header>
@@ -36,7 +36,7 @@
     </ion-card>
   </div>
   <div class="fixed-button">
-    <ion-button (click)="onAddWeight()">
+    <ion-button (click)="onAddWeight(false)">
       <ion-icon slot="start" name="add-circle-outline"></ion-icon>
       Add Weight
     </ion-button>

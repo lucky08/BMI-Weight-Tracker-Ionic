@@ -8,13 +8,16 @@ import { ModalController, NavParams } from '@ionic/angular';
   standalone: false,
 })
 export class WeightDateModalPage implements OnInit {
+  isEdit: boolean;
   weight: number | null = null;
   selectedDate: string | null = null;
 
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
-  ) {}
+  ) {
+    this.isEdit = this.navParams.get('isEdit');
+  }
 
   ngOnInit() {}
 

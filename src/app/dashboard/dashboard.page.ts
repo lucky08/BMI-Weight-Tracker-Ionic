@@ -23,17 +23,30 @@ export class DashboardPage {
     this.router.navigate(['/tabs/dashboard/body-fat-percentage-detail']);
   }
 
-  async onAddWeight() {
+  async onAddWeight(isEdit: boolean) {
     const modal = await this.modalController.create({
       component: WeightDateModalPage, // open Modal page
+      componentProps: {
+        isEdit: isEdit,
+      },
     });
 
     modal.onDidDismiss().then((detail) => {
       if (detail !== null && detail.data.result !== 'closed') {
-        console.log(detail.data.result);
+        const weightDate = {
+          weight: detail.data.result.weight,
+          date: this.formatDate(detail.data.result),
+        };
+
+        console.log(weightDate);
       }
     });
 
     await modal.present();
+  }
+
+  formatDate(dateTime: string): string {
+    const date = new Date(dateTime);
+    return date.toISOString().split('T')[0];
   }
 }
