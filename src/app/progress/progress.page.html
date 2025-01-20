@@ -1,7 +1,13 @@
-<ion-content [fullscreen]="true">
-  <!--<ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>-->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Progress</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="chart-container">
+    <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" chartType="line">
+      <!-- 这里设置为折线图 -->
+    </canvas>
+  </div>
 </ion-content>
