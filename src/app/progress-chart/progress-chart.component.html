@@ -1,0 +1,19 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>progress-chart</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="chart-container">
+    <canvas
+      *ngIf="lineChartData.labels && lineChartData.datasets"
+      baseChart
+      [datasets]="lineChartData.datasets"
+      [labels]="lineChartData.labels"
+      [options]="lineChartOptions"
+      chartType="line"
+    >
+    </canvas>
+  </div>
+</ion-content>

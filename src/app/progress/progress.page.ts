@@ -1,5 +1,5 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { Component } from '@angular/core';
+import { ChartData } from 'chart.js';
 
 @Component({
   selector: 'app-progress',
@@ -7,52 +7,53 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
   styleUrls: ['progress.page.scss'],
   standalone: false,
 })
-export class ProgressPage implements AfterViewInit {
-  // Items for chart data
-  items = [
-    ['Date', 'Weight'],
-    ['Jan 14, 2025', '73.6kg'],
-    ['Jan 11, 2025', '74.4kg'],
-    ['Jan 10, 2025', '75.5kg'],
-  ];
+export class ProgressPage {
+  chartData: ChartData<'line'> = {
+    labels: [],
+    datasets: [],
+  };
 
-  // Chart data
-  public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: this.items.slice(1).map((item) => item[0]), // Extract Dates
+  selectedTab: string = 'weight';
+  // Items for chart data
+  data = {
+    dates: ['Jan 14, 2025', 'Jan 11, 2025', 'Jan 10, 2025'],
     datasets: [
       {
-        data: this.items.slice(1).map((item) => parseFloat(item[1].replace('kg', ''))), // Extract Weights
-        label: 'Weight (kg)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        fill: false,
-        tension: 0.4,
-        type: 'line', // Set Line Chart
+        label: 'weight',
+        data: [73.6, 74.4, 75.5],
+      },
+      {
+        label: 'bmi',
+        data: [20.0, 21.1, 22.0],
+      },
+      {
+        label: 'bodyFat',
+        data: [23.5, 22.3, 21.41],
       },
     ],
   };
 
-  // Chart options
-  public lineChartOptions: ChartOptions<'line'> = {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: false,
-      },
-    },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-        onClick: (e: any) => {
-          // 阻止点击事件冒泡
-          e.stopImmediatePropagation();
-        }, // 禁止点击图例时切换折线图的显示/隐藏
-      },
-    },
-  };
+  constructor() {
+    this.updateChartData();
+  }
 
-  constructor() {}
+  onTabChange() {
+    this.updateChartData();
+  }
 
-  ngAfterViewInit(): void {}
+  updateChartData() {
+    const selectedDataset = this.data.datasets.find((dataset) => dataset.label === this.selectedTab);
+    if (selectedDataset) {
+      this.chartData = {
+        labels: this.data.dates, // reuse labels
+        datasets: [
+          {
+            ...selectedDataset, // include label and data
+          },
+        ],
+      };
+    } else {
+      console.error('Invalid tab selected:', this.selectedTab);
+    }
+  }
 }

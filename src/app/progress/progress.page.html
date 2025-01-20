@@ -1,13 +1,17 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Progress</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <div class="chart-container">
-    <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" chartType="line">
-      <!-- 这里设置为折线图 -->
-    </canvas>
-  </div>
+  <ion-segment [(ngModel)]="selectedTab" (ionChange)="onTabChange()">
+    <ion-segment-button value="weight" content-id="weight">
+      <ion-label>Weight</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="bmi" content-id="bmi">
+      <ion-label>BMI</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="bodyFat" content-id="bodyFat">
+      <ion-label>Body Fat</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-segment-view>
+    <app-progress-chart [chartData]="chartData"></app-progress-chart>
+  </ion-segment-view>
 </ion-content>
