@@ -34,15 +34,15 @@ export class ProgressPage {
   };
 
   constructor() {
-    this.updateChartData();
+    this.updateChartData(this.selectedTab);
   }
 
-  onTabChange() {
-    this.updateChartData();
+  setSelectedTab(selectedTab: string) {
+    this.updateChartData(selectedTab);
   }
 
-  updateChartData() {
-    const selectedDataset = this.data.datasets.find((dataset) => dataset.label === this.selectedTab);
+  updateChartData(selectedTab: string) {
+    const selectedDataset = this.data.datasets.find((dataset) => dataset.label === selectedTab);
     if (selectedDataset) {
       this.chartData = {
         labels: this.data.dates, // reuse labels

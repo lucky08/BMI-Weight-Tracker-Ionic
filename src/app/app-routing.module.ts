@@ -10,10 +10,6 @@ const routes: Routes = [
     path: 'weight-date-modal',
     loadChildren: () => import('./weight-date-modal/weight-date-modal.module').then((m) => m.WeightDateModalPageModule),
   },
-  /*{
-    path: 'progress-chart',
-    loadChildren: () => import('./progress-chart/progress-chart.module').then((m) => m.ProgressChartComponentModule),
-  },*/
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
