@@ -10,6 +10,10 @@ const routes: Routes = [
     path: 'weight-date-modal',
     loadChildren: () => import('./weight-date-modal/weight-date-modal.module').then((m) => m.WeightDateModalPageModule),
   },
+  {
+    path: 'user-profile',
+    loadChildren: () => import('./user-profile/user-profile.module').then( m => m.UserProfilePageModule)
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
