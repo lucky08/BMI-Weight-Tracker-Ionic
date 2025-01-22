@@ -30,6 +30,7 @@ export class WeightDateModalPage implements OnInit {
       weight: this.weight,
       date: this.selectedDate,
     };
+
     this.modalController.dismiss({ result: data });
   }
 }
