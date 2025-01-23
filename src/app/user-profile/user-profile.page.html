@@ -27,8 +27,11 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label position="stacked">Height</ion-label>
-            <ion-input type="number" formControlName="height"></ion-input>
+            <ion-label position="stacked">Gender</ion-label>
+            <ion-select formControlName="gender" [(ngModel)]="selectedGender" interface="popover">
+              <ion-select-option value="male">Male</ion-select-option>
+              <ion-select-option value="female">Female</ion-select-option>
+            </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -36,11 +39,8 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label position="stacked">Gender</ion-label>
-            <ion-select formControlName="gender" placeholder="Select Gender">
-              <ion-select-option value="male">Male</ion-select-option>
-              <ion-select-option value="female">Female</ion-select-option>
-            </ion-select>
+            <ion-label position="stacked">Height</ion-label>
+            <ion-input type="number" formControlName="height"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>

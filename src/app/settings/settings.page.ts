@@ -12,6 +12,9 @@ export class SettingsPage implements OnInit {
     darkMode: false,
   };
 
+  selectedWeightUnit: string = 'kgs';
+  selectedHeightUnit: string = 'cm';
+
   constructor() {}
 
   ngOnInit() {}

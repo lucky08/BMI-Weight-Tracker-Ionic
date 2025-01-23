@@ -11,6 +11,8 @@ export class UserProfilePage implements OnInit {
   profileForm: FormGroup;
   maxDate: string;
 
+  selectedGender: string = 'male';
+
   constructor(private fb: FormBuilder) {
     this.maxDate = new Date().toISOString().split('T')[0];
 
