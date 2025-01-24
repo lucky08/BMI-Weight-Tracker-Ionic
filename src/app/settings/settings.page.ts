@@ -8,18 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsPage implements OnInit {
   settings = {
-    notifications: true,
+    weightUnit: 'kgs',
+    heightUnit: 'cm',
     darkMode: false,
   };
-
-  selectedWeightUnit: string = 'kgs';
-  selectedHeightUnit: string = 'cm';
 
   constructor() {}
 
   ngOnInit() {}
 
-  toggleDarkMode() {
-    document.body.classList.toggle('dark', this.settings.darkMode);
+  toggleDarkMode(event: any) {
+    const shouldAdd = event.detail.checked;
+
+    document.body.classList.toggle('dark-theme', shouldAdd);
   }
 }

@@ -42,17 +42,6 @@ export class ProgressChartComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chartData'] && this.chartData) {
-      // Extract labels and data from `chartData`
-      /*const labels = this.chartData.labels || [];
-      const datasets = this.chartData.datasets.map((dataset) => ({
-        ...dataset,
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        fill: false,
-        tension: 0.4,
-        type: 'line', // Set Line Chart
-      }));*/
-
       // Update `lineChartData`
       this.lineChartData = {
         labels: this.chartData.labels, // Extract Dates

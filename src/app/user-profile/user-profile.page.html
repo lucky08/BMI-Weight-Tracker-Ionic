@@ -3,22 +3,23 @@
     <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item class="item-row">
             <ion-label position="stacked">User Name</ion-label>
-            <ion-input type="text" formControlName="name"></ion-input>
+            <ion-input type="text" placeholder="Please input your name" formControlName="name"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item class="item-row">
             <ion-label position="stacked">Date of Birth</ion-label>
             <ion-datetime
               formControlName="dateOfBirth"
               presentation="date"
               placeholder="Select Date"
               [max]="maxDate"
+              required
             ></ion-datetime>
           </ion-item>
         </ion-col>
@@ -26,7 +27,7 @@
 
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item class="item-row">
             <ion-label position="stacked">Gender</ion-label>
             <ion-select formControlName="gender" [(ngModel)]="selectedGender" interface="popover">
               <ion-select-option value="male">Male</ion-select-option>
@@ -38,9 +39,9 @@
 
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item class="item-row">
             <ion-label position="stacked">Height</ion-label>
-            <ion-input type="number" formControlName="height"></ion-input>
+            <ion-input type="number" placeholder="Please input your height" formControlName="height"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>

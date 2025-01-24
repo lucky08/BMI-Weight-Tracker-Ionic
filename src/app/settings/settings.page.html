@@ -1,34 +1,39 @@
 <ion-content>
   <ion-list>
     <!-- Profile Section -->
-    <ion-item>
+    <ion-item class="item-row">
       <ion-icon name="person-outline" slot="start"></ion-icon>
       <ion-label>User Profile</ion-label>
-      <ion-button fill="clear" color="primary" slot="end" routerLink="/user-profile"> Edit </ion-button>
+      <ion-button fill="clear" slot="end" routerLink="/user-profile"> Edit </ion-button>
     </ion-item>
 
-    <ion-item>
+    <ion-item class="item-row">
       <ion-icon name="scale-outline" slot="start"></ion-icon>
       <ion-label>Weight Units</ion-label>
-      <ion-select [(ngModel)]="selectedWeightUnit" interface="popover" slot="end">
+      <ion-select [(ngModel)]="settings.weightUnit" interface="popover" slot="end">
         <ion-select-option value="kgs">Kilograms (kgs)</ion-select-option>
         <ion-select-option value="lbs">Pounds (lbs)</ion-select-option>
       </ion-select>
     </ion-item>
 
-    <ion-item>
+    <ion-item class="item-row">
       <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
       <ion-label>Height Units</ion-label>
-      <ion-select [(ngModel)]="selectedHeightUnit" interface="popover" slot="end">
+      <ion-select [(ngModel)]="settings.heightUnit" interface="popover" slot="end">
         <ion-select-option value="cm">Centimeters (cm)</ion-select-option>
         <ion-select-option value="in">Inches (in)</ion-select-option>
       </ion-select>
     </ion-item>
 
-    <ion-item>
+    <ion-item class="item-row">
       <ion-icon name="moon-outline" slot="start"></ion-icon>
       <ion-label>Dark Mode</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="settings.darkMode" (ionChange)="toggleDarkMode()"></ion-toggle>
+      <ion-toggle
+        slot="end"
+        color="light"
+        [(ngModel)]="settings.darkMode"
+        (ionChange)="toggleDarkMode($event)"
+      ></ion-toggle>
     </ion-item>
   </ion-list>
 </ion-content>
