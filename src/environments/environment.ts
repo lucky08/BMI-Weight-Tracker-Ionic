@@ -4,6 +4,9 @@
 
 export const environment = {
   production: false,
+  apiUrl: 'http://localhost:3000',
+  assetsUrl: 'http://localhost:4200/assets',
+  url: 'http://localhost:4200',
 };
 
 /*
