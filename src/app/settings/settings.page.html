@@ -9,19 +9,10 @@
 
     <ion-item class="item-row">
       <ion-icon name="scale-outline" slot="start"></ion-icon>
-      <ion-label>Weight Units</ion-label>
-      <ion-select [(ngModel)]="settings.weightUnit" interface="popover" slot="end">
-        <ion-select-option value="kgs">Kilograms (kgs)</ion-select-option>
-        <ion-select-option value="lbs">Pounds (lbs)</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item class="item-row">
-      <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
-      <ion-label>Height Units</ion-label>
-      <ion-select [(ngModel)]="settings.heightUnit" interface="popover" slot="end">
-        <ion-select-option value="cm">Centimeters (cm)</ion-select-option>
-        <ion-select-option value="in">Inches (in)</ion-select-option>
+      <ion-label>Units</ion-label>
+      <ion-select [(ngModel)]="settings.unit" interface="popover" slot="end">
+        <ion-select-option value="china">Kilograms (kgs) & Centimeters (cm)</ion-select-option>
+        <ion-select-option value="usa">Pounds (lbs) & Feet (ft)</ion-select-option>
       </ion-select>
     </ion-item>
 

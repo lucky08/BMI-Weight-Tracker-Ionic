@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-user-profile',
@@ -9,22 +9,49 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class UserProfilePage implements OnInit {
   profileForm: FormGroup;
-  maxDate: string;
-
   selectedGender: string = 'male';
+  ageOptions: any;
+  heightOptions: any;
+  ageControl = new FormControl(null, Validators.required);
+  heightControl = new FormControl(null, Validators.required);
 
   constructor(private fb: FormBuilder) {
-    this.maxDate = new Date().toISOString().split('T')[0];
-
     this.profileForm = this.fb.group({
       name: ['', [Validators.required]],
-      dateOfBirth: ['', Validators.required],
-      gender: ['', Validators.required],
-      height: ['', [Validators.required]],
+      age: this.ageControl,
+      gender: ['', [Validators.required]],
+      height: this.heightControl,
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.ageOptions = this.generateAgeOptions();
+    this.heightOptions = this.generateCMHeightOptions();
+  }
+
+  generateAgeOptions() {
+    let options = [];
+    for (let i = 7; i <= 100; i++) {
+      options.push({ text: `${i}`, value: i });
+    }
+    return options;
+  }
+
+  generateCMHeightOptions() {
+    let options = [];
+    for (let i = 50; i <= 250; i++) {
+      options.push({ text: `${i} cm`, value: i });
+    }
+    return options;
+  }
+
+  onAgeChange(event: any) {
+    this.ageControl.setValue(event.detail.value);
+  }
+
+  onHeightChange(event: any) {
+    this.heightControl.setValue(event.detail.value);
+  }
 
   onSubmit() {
     if (this.profileForm.valid) {
@@ -32,8 +59,6 @@ export class UserProfilePage implements OnInit {
     }
   }
 
-  formatDate(dateTime: string): string {
-    const date = new Date(dateTime);
-    return date.toISOString().split('T')[0];
-  }
+  onChange: any = () => {};
+  onTouched: any = () => {};
 }

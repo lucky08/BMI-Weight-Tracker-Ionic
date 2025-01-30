@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
     const info = await this.getDeviceInfo();
 
     this.deviceService.getByUuid(identifier).subscribe((device) => {
+      console.log(!device);
       if (!device) {
         const device = {
           uuid: identifier,

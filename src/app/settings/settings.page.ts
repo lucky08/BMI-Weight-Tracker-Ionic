@@ -8,8 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsPage implements OnInit {
   settings = {
-    weightUnit: 'kgs',
-    heightUnit: 'cm',
+    unit: 'china',
     darkMode: false,
   };
 

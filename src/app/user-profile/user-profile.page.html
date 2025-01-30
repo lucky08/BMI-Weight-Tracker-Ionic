@@ -13,14 +13,14 @@
       <ion-row>
         <ion-col>
           <ion-item class="item-row">
-            <ion-label position="stacked">Date of Birth</ion-label>
-            <ion-datetime
-              formControlName="dateOfBirth"
-              presentation="date"
-              placeholder="Select Date"
-              [max]="maxDate"
-              required
-            ></ion-datetime>
+            <ion-label position="stacked">Age</ion-label>
+            <ion-picker [formControl]="ageControl" (ionChange)="onAgeChange($event)">
+              <ion-picker-column>
+                <ion-picker-column-option *ngFor="let age of ageOptions" [value]="age.value">
+                  {{ age.text }}
+                </ion-picker-column-option>
+              </ion-picker-column>
+            </ion-picker>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -41,7 +41,13 @@
         <ion-col>
           <ion-item class="item-row">
             <ion-label position="stacked">Height</ion-label>
-            <ion-input type="number" placeholder="Please input your height" formControlName="height"></ion-input>
+            <ion-picker [formControl]="heightControl" (ionChange)="onHeightChange($event)">
+              <ion-picker-column>
+                <ion-picker-column-option *ngFor="let height of heightOptions" [value]="height.value">
+                  {{ height.text }}
+                </ion-picker-column-option>
+              </ion-picker-column>
+            </ion-picker>
           </ion-item>
         </ion-col>
       </ion-row>
