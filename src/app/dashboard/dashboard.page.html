@@ -36,9 +36,16 @@
     </ion-card>
   </div>
   <div class="fixed-button">
-    <ion-button (click)="onAddWeight(false)">
-      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-      Add Weight
-    </ion-button>
+    <div *ngIf="isEdit;else content">
+      <ion-button (click)="onAddWeight(false)">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Add Weight
+      </ion-button>
+    </div>
+    <div class="create-profile-warning">
+      <ng-template #content>
+        <span class="warning-text">Please create your profile at first from the Settings tab</span>
+      </ng-template>
+    </div>
   </div>
 </ion-content>

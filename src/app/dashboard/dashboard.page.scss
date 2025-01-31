@@ -40,3 +40,24 @@ ion-card-title,
 ion-card-content {
   font-size: 1.4rem;
 }
+
+.fixed-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-profile-warning {
+  margin-top: 60px;
+}
+
+.warning-text {
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px;
+  background: #fdecea;
+  border-radius: 5px;
+}

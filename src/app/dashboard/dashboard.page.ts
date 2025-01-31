@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal.page';
+
+// services
+import { DeviceService } from 'src/app/core/services/device.service';
+import { UserProfileService } from 'src/app/core/services/user-profile.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,11 +13,26 @@ import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal
   styleUrls: ['dashboard.page.scss'],
   standalone: false,
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
+  uuid: any;
+  isEdit: boolean = false;
+
   constructor(
     private router: Router,
+    private userProfileService: UserProfileService,
     private modalController: ModalController,
+    private deviceService: DeviceService,
   ) {}
+
+  async ngOnInit() {
+    this.uuid = await this.deviceService.getDeviceId();
+
+    this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
+      if (userProfile) {
+        this.isEdit = true;
+      }
+    });
+  }
 
   navigateToBMIDetail() {
     this.router.navigate(['/tabs/dashboard/bmi-detail']);

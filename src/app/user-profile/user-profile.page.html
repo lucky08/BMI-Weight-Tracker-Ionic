@@ -57,6 +57,9 @@
           <ion-button expand="block" type="submit" [disabled]="!profileForm.valid"
             >{{ isEdit ? 'Edit Profile' : 'Create Profile' }}</ion-button
           >
+          <ion-button expand="block" type="button" color="medium" fill="outline" (click)="cancelUserProfile()"
+            >Cancel</ion-button
+          >
         </ion-col>
       </ion-row>
     </form>

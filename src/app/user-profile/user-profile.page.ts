@@ -118,4 +118,12 @@ export class UserProfilePage implements OnInit {
       }
     }
   }
+
+  cancelUserProfile() {
+    if (!this.isEdit) {
+      this.router.navigate(['/tabs/settings']);
+    } else {
+      this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
+    }
+  }
 }
