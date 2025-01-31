@@ -4,7 +4,8 @@
     <ion-item class="item-row">
       <ion-icon name="person-outline" slot="start"></ion-icon>
       <ion-label>User Profile</ion-label>
-      <ion-button fill="clear" slot="end" routerLink="/user-profile">{{ isEdit ? 'Edit' : 'New' }}</ion-button>
+      <ion-button *ngIf="!isEdit" fill="clear" slot="end" [routerLink]="['/user-profile']"> New </ion-button>
+      <ion-button *ngIf="isEdit" fill="clear" slot="end" [routerLink]="['/user-profile', uuid]"> Edit </ion-button>
     </ion-item>
 
     <ion-item class="item-row">

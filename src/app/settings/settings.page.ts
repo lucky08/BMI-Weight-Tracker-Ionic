@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 // services
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
@@ -13,7 +12,7 @@ import { DeviceService } from 'src/app/core/services/device.service';
 })
 export class SettingsPage implements OnInit {
   isEdit: boolean = false;
-
+  uuid: string = '';
   settings = {
     unit: 'china',
     darkMode: false,
@@ -22,18 +21,11 @@ export class SettingsPage implements OnInit {
   constructor(
     private userProfileService: UserProfileService,
     private deviceService: DeviceService,
-    private route: ActivatedRoute,
   ) {}
 
   async ngOnInit() {
-    const identifier = await this.deviceService.getDeviceId();
-    this.checkIsNewUserProfile(identifier);
-
-    this.route.queryParams.subscribe((params) => {
-      if (params['refresh']) {
-        this.checkIsNewUserProfile(identifier);
-      }
-    });
+    this.uuid = await this.deviceService.getDeviceId();
+    this.checkIsNewUserProfile(this.uuid);
   }
 
   checkIsNewUserProfile(identifier: any) {

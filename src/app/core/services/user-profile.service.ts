@@ -21,4 +21,8 @@ export class UserProfileService {
   save(userProfile: UserProfile) {
     return this.http.post<UserProfile>(`${BACKEND_URL}/user-profile`, userProfile);
   }
+
+  update(userProfile: UserProfile) {
+    return this.http.patch<UserProfile>(`${BACKEND_URL}/user-profile`, userProfile);
+  }
 }

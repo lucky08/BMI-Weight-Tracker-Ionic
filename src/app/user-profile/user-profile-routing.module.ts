@@ -6,8 +6,12 @@ import { UserProfilePage } from './user-profile.page';
 const routes: Routes = [
   {
     path: '',
-    component: UserProfilePage
-  }
+    component: UserProfilePage,
+  },
+  {
+    path: ':uuid',
+    component: UserProfilePage,
+  },
 ];
 
 @NgModule({

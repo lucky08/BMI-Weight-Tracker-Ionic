@@ -15,7 +15,7 @@
           <ion-item class="item-row">
             <ion-label position="stacked">Age</ion-label>
             <ion-picker [formControl]="ageControl" (ionChange)="onAgeChange($event)">
-              <ion-picker-column>
+              <ion-picker-column [value]="selectedAge">
                 <ion-picker-column-option *ngFor="let age of ageOptions" [value]="age.value">
                   {{ age.text }}
                 </ion-picker-column-option>
@@ -42,7 +42,7 @@
           <ion-item class="item-row">
             <ion-label position="stacked">Height</ion-label>
             <ion-picker [formControl]="heightControl" (ionChange)="onHeightChange($event)">
-              <ion-picker-column>
+              <ion-picker-column [value]="selectedHeight">
                 <ion-picker-column-option *ngFor="let height of heightOptions" [value]="height.value">
                   {{ height.text }}
                 </ion-picker-column-option>
@@ -54,7 +54,9 @@
 
       <ion-row>
         <ion-col>
-          <ion-button expand="block" type="submit" [disabled]="!profileForm.valid">Save Profile</ion-button>
+          <ion-button expand="block" type="submit" [disabled]="!profileForm.valid"
+            >{{ isEdit ? 'Edit Profile' : 'Create Profile' }}</ion-button
+          >
         </ion-col>
       </ion-row>
     </form>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
 // services
@@ -18,9 +19,13 @@ export class UserProfilePage implements OnInit {
   selectedGender: string = 'male';
   ageOptions: any;
   heightOptions: any;
-  ageControl = new FormControl(null, Validators.required);
-  heightControl = new FormControl(null, Validators.required);
+  ageControl = new FormControl<number | null>(null, Validators.required);
+  heightControl = new FormControl<number | null>(null, Validators.required);
   isToastOpen = false;
+  selectedAge: number = 25;
+  selectedHeight: number = 160;
+  uuid: any;
+  isEdit: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +33,7 @@ export class UserProfilePage implements OnInit {
     private userProfileService: UserProfileService,
     private deviceService: DeviceService,
     private toastService: ToastService,
+    private route: ActivatedRoute,
   ) {
     this.profileForm = this.fb.group({
       userName: ['', [Validators.required]],
@@ -37,9 +43,28 @@ export class UserProfilePage implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.ageOptions = this.generateAgeOptions();
     this.heightOptions = this.generateCMHeightOptions();
+    this.uuid = await this.deviceService.getDeviceId();
+
+    this.route.paramMap.subscribe((params) => {
+      if (params.get('uuid')) {
+        this.isEdit = true;
+      }
+    });
+
+    this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
+      if (userProfile) {
+        this.ageControl.patchValue(userProfile.age);
+        this.selectedAge = userProfile.age;
+
+        this.heightControl.patchValue(userProfile.height);
+        this.selectedHeight = userProfile.height;
+        this.profileForm.patchValue({ userName: userProfile.userName });
+        this.profileForm.patchValue({ gender: userProfile.gender });
+      }
+    });
   }
 
   generateAgeOptions() {
@@ -73,15 +98,24 @@ export class UserProfilePage implements OnInit {
         age: this.profileForm.value.age,
         gender: this.profileForm.value.gender,
         height: this.profileForm.value.height,
-        uuid: await this.deviceService.getDeviceId(),
+        uuid: this.uuid,
       };
 
-      this.userProfileService.save(userProfile).subscribe((createdUserProfile) => {
-        if (createdUserProfile) {
-          this.toastService.info('Your profile has been created successfully', 3000, 'bottom');
-          this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
-        }
-      });
+      if (!this.isEdit) {
+        this.userProfileService.save(userProfile).subscribe((createdUserProfile) => {
+          if (createdUserProfile) {
+            this.toastService.info('Your profile has been created successfully', 3000, 'bottom');
+            this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
+          }
+        });
+      } else {
+        this.userProfileService.update(userProfile).subscribe((updatedUserProfile) => {
+          if (updatedUserProfile) {
+            this.toastService.info('Your profile has been updated successfully', 3000, 'bottom');
+            this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
+          }
+        });
+      }
     }
   }
 }
