@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+
+// services
+import { UserProfileService } from 'src/app/core/services/user-profile.service';
+import { DeviceService } from 'src/app/core/services/device.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,10 +20,17 @@ export class UserProfilePage implements OnInit {
   heightOptions: any;
   ageControl = new FormControl(null, Validators.required);
   heightControl = new FormControl(null, Validators.required);
+  isToastOpen = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private userProfileService: UserProfileService,
+    private deviceService: DeviceService,
+    private toastService: ToastService,
+  ) {
     this.profileForm = this.fb.group({
-      name: ['', [Validators.required]],
+      userName: ['', [Validators.required]],
       age: this.ageControl,
       gender: ['', [Validators.required]],
       height: this.heightControl,
@@ -53,12 +66,22 @@ export class UserProfilePage implements OnInit {
     this.heightControl.setValue(event.detail.value);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.profileForm.valid) {
-      console.log('User Profile:', this.profileForm.value);
+      const userProfile = {
+        userName: this.profileForm.value.userName,
+        age: this.profileForm.value.age,
+        gender: this.profileForm.value.gender,
+        height: this.profileForm.value.height,
+        uuid: await this.deviceService.getDeviceId(),
+      };
+
+      this.userProfileService.save(userProfile).subscribe((createdUserProfile) => {
+        if (createdUserProfile) {
+          this.toastService.info('Your profile has been created successfully', 3000, 'bottom');
+          this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
+        }
+      });
     }
   }
-
-  onChange: any = () => {};
-  onTouched: any = () => {};
 }

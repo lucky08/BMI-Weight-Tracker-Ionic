@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Device } from '@capacitor/device';
 
 // service
 import { DeviceService } from 'src/app/core/services/device.service';
@@ -14,8 +13,8 @@ export class AppComponent implements OnInit {
   constructor(private deviceService: DeviceService) {}
 
   async ngOnInit() {
-    const identifier = await this.getDeviceId();
-    const info = await this.getDeviceInfo();
+    const identifier = await this.deviceService.getDeviceId();
+    const info = await this.deviceService.getDeviceInfo();
 
     this.deviceService.getByUuid(identifier).subscribe((device) => {
       console.log(!device);
@@ -33,15 +32,5 @@ export class AppComponent implements OnInit {
         this.deviceService.save(device).subscribe();
       }
     });
-  }
-
-  async getDeviceId() {
-    const info = await Device.getId();
-    return info.identifier;
-  }
-
-  async getDeviceInfo() {
-    const info = await Device.getInfo();
-    return info;
   }
 }

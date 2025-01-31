@@ -4,4 +4,5 @@ export interface UserProfile {
   age: number;
   gender: string;
   height: number;
+  uuid: string;
 }

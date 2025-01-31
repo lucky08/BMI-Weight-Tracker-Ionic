@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Device } from 'src/app/core/models/device.model';
+import { Device as ModelDevice } from 'src/app/core/models/device.model';
+import { Device as CapacitorDevice } from '@capacitor/device';
 import { environment } from 'src/environments/environment';
 
 const BACKEND_URL = environment.apiUrl;
@@ -12,14 +12,24 @@ export class DeviceService {
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<Device[]>(`${BACKEND_URL}/device`);
+    return this.http.get<ModelDevice[]>(`${BACKEND_URL}/device`);
   }
 
   getByUuid(uuid: string) {
-    return this.http.get<Device>(`${BACKEND_URL}/device/${uuid}`);
+    return this.http.get<ModelDevice>(`${BACKEND_URL}/device/${uuid}`).pipe(take(1));
   }
 
-  save(device: Device) {
-    return this.http.post<Device>(`${BACKEND_URL}/device`, device);
+  save(device: ModelDevice) {
+    return this.http.post<ModelDevice>(`${BACKEND_URL}/device`, device);
+  }
+
+  async getDeviceId() {
+    const info = await CapacitorDevice.getId();
+    return info.identifier;
+  }
+
+  async getDeviceInfo() {
+    const info = await CapacitorDevice.getInfo();
+    return info;
   }
 }
