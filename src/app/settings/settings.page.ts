@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { SettingService } from 'src/app/core/services/setting.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-settings',
@@ -23,6 +24,7 @@ export class SettingsPage implements OnInit {
     private userProfileService: UserProfileService,
     private deviceService: DeviceService,
     private settingService: SettingService,
+    private toastService: ToastService,
   ) {}
 
   async ngOnInit() {
@@ -33,6 +35,10 @@ export class SettingsPage implements OnInit {
         unit: updatedSetting.unit,
         darkMode: updatedSetting.darkMode,
       };
+
+      if (this.settings.darkMode) {
+        document.body.classList.toggle('dark-theme', this.settings.darkMode);
+      }
     });
   }
 
@@ -46,9 +52,20 @@ export class SettingsPage implements OnInit {
     });
   }
 
-  toggleDarkMode(event: any) {
-    const shouldAdd = event.detail.checked;
-
+  updateSettings() {
+    const shouldAdd = this.settings.darkMode;
     document.body.classList.toggle('dark-theme', shouldAdd);
+
+    const updatedSetting = {
+      unit: this.settings.unit,
+      darkMode: this.settings.darkMode,
+      uuid: this.uuid,
+    };
+
+    this.settingService.update(updatedSetting).subscribe((updatedSetting) => {
+      if (updatedSetting) {
+        this.toastService.info('Your setting has been updated successfully', 2000, 'bottom');
+      }
+    });
   }
 }

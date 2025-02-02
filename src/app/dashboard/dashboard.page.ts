@@ -6,6 +6,7 @@ import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal
 // services
 import { DeviceService } from 'src/app/core/services/device.service';
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
+import { SettingService } from 'src/app/core/services/setting.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,10 +23,17 @@ export class DashboardPage implements OnInit {
     private userProfileService: UserProfileService,
     private modalController: ModalController,
     private deviceService: DeviceService,
+    private settingService: SettingService,
   ) {}
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
+
+    this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
+      if (updatedSetting.darkMode) {
+        document.body.classList.toggle('dark-theme', updatedSetting.darkMode);
+      }
+    });
 
     this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
       if (userProfile) {
