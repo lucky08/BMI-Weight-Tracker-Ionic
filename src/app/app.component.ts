@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 // service
 import { DeviceService } from 'src/app/core/services/device.service';
+import { SettingService } from 'src/app/core/services/setting.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,10 @@ import { DeviceService } from 'src/app/core/services/device.service';
   standalone: false,
 })
 export class AppComponent implements OnInit {
-  constructor(private deviceService: DeviceService) {}
+  constructor(
+    private deviceService: DeviceService,
+    private settingService: SettingService,
+  ) {}
 
   async ngOnInit() {
     const identifier = await this.deviceService.getDeviceId();
@@ -29,7 +33,19 @@ export class AppComponent implements OnInit {
           platform: info.platform,
           webViewVersion: info.webViewVersion,
         };
-        this.deviceService.save(device).subscribe();
+
+        this.deviceService.save(device).subscribe((createdDevice) => {
+          if (createdDevice) {
+            // Add default setting
+            const setting = {
+              unit: 'china',
+              darkMode: false,
+              uuid: identifier,
+            };
+
+            this.settingService.save(setting).subscribe();
+          }
+        });
       }
     });
   }
