@@ -7,6 +7,10 @@ import { Router } from '@angular/router';
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { SettingService } from 'src/app/core/services/setting.service';
+
+// constants
+import { feetToCentimeters } from 'src/app/shared/constants/feet-to-centimeters';
 
 @Component({
   selector: 'app-user-profile',
@@ -32,6 +36,7 @@ export class UserProfilePage implements OnInit {
     private router: Router,
     private userProfileService: UserProfileService,
     private deviceService: DeviceService,
+    private settingService: SettingService,
     private toastService: ToastService,
     private route: ActivatedRoute,
   ) {
@@ -45,7 +50,6 @@ export class UserProfilePage implements OnInit {
 
   async ngOnInit() {
     this.ageOptions = this.generateAgeOptions();
-    this.heightOptions = this.generateCMHeightOptions();
     this.uuid = await this.deviceService.getDeviceId();
 
     this.route.paramMap.subscribe((params) => {
@@ -65,6 +69,10 @@ export class UserProfilePage implements OnInit {
         this.profileForm.patchValue({ gender: userProfile.gender });
       }
     });
+
+    this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
+      this.heightOptions = this.generateCMHeightOptions(updatedSetting.unit);
+    });
   }
 
   generateAgeOptions() {
@@ -75,11 +83,19 @@ export class UserProfilePage implements OnInit {
     return options;
   }
 
-  generateCMHeightOptions() {
+  generateCMHeightOptions(unit: any) {
     let options = [];
-    for (let i = 50; i <= 250; i++) {
-      options.push({ text: `${i} cm`, value: i });
+
+    if (unit === 'usa') {
+      for (let feetToCentimeter of feetToCentimeters) {
+        options.push({ text: feetToCentimeter.text, value: feetToCentimeter.value });
+      }
+    } else if (unit === 'china') {
+      for (let i = 50; i <= 250; i++) {
+        options.push({ text: `${i} cm`, value: i });
+      }
     }
+
     return options;
   }
 
