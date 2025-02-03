@@ -125,7 +125,7 @@ export const feetToCentimeters = [
   },
   {
     text: `4'2"`,
-    value: 127.0,
+    value: 127,
   },
   {
     text: `4'3"`,

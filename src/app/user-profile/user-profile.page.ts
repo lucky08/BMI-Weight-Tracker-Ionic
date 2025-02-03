@@ -23,13 +23,12 @@ export class UserProfilePage implements OnInit {
   selectedGender: string = 'male';
   ageOptions: any;
   heightOptions: any;
-  ageControl = new FormControl<number | null>(null, Validators.required);
-  heightControl = new FormControl<number | null>(null, Validators.required);
   isToastOpen = false;
-  selectedAge: number = 25;
-  selectedHeight: number = 160;
+  selectedAge: number = 26;
+  selectedHeight: number = 165;
   uuid: any;
   isEdit: boolean = false;
+  centimetersUSAValues: any;
 
   constructor(
     private fb: FormBuilder,
@@ -42,15 +41,16 @@ export class UserProfilePage implements OnInit {
   ) {
     this.profileForm = this.fb.group({
       userName: ['', [Validators.required]],
-      age: this.ageControl,
+      age: ['', [Validators.required]],
       gender: ['', [Validators.required]],
-      height: this.heightControl,
+      height: ['', [Validators.required]],
     });
   }
 
   async ngOnInit() {
     this.ageOptions = this.generateAgeOptions();
     this.uuid = await this.deviceService.getDeviceId();
+    this.centimetersUSAValues = feetToCentimeters.map((item) => item.value);
 
     this.route.paramMap.subscribe((params) => {
       if (params.get('uuid')) {
@@ -58,20 +58,31 @@ export class UserProfilePage implements OnInit {
       }
     });
 
-    this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
-      if (userProfile) {
-        this.ageControl.patchValue(userProfile.age);
-        this.selectedAge = userProfile.age;
-
-        this.heightControl.patchValue(userProfile.height);
-        this.selectedHeight = userProfile.height;
-        this.profileForm.patchValue({ userName: userProfile.userName });
-        this.profileForm.patchValue({ gender: userProfile.gender });
-      }
-    });
-
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
+      console.log('unit: ' + updatedSetting.unit);
       this.heightOptions = this.generateCMHeightOptions(updatedSetting.unit);
+
+      this.selectedHeight = updatedSetting.unit === 'usa' ? 162.56 : 165;
+      console.log('selectedHeight: ' + this.selectedHeight);
+
+      this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
+        if (userProfile) {
+          this.profileForm.patchValue({ age: userProfile.age });
+
+          if (updatedSetting.unit === 'china') {
+            this.profileForm.patchValue({ height: userProfile.height });
+          } else if (updatedSetting.unit === 'usa') {
+            const closestUserProfileHeight = this.centimetersUSAValues.reduce((prev: any, curr: any) =>
+              Math.abs(curr - userProfile.height) < Math.abs(prev - userProfile.height) ? curr : prev,
+            );
+
+            this.profileForm.patchValue({ height: closestUserProfileHeight });
+          }
+
+          this.profileForm.patchValue({ userName: userProfile.userName });
+          this.profileForm.patchValue({ gender: userProfile.gender });
+        }
+      });
     });
   }
 
@@ -97,14 +108,6 @@ export class UserProfilePage implements OnInit {
     }
 
     return options;
-  }
-
-  onAgeChange(event: any) {
-    this.ageControl.setValue(event.detail.value);
-  }
-
-  onHeightChange(event: any) {
-    this.heightControl.setValue(event.detail.value);
   }
 
   async onSubmit() {
