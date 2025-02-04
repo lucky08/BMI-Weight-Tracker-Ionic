@@ -56,6 +56,8 @@ export class DashboardPage implements OnInit {
       componentProps: {
         isEdit: isEdit,
       },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1,
     });
 
     modal.onDidDismiss().then((detail) => {
