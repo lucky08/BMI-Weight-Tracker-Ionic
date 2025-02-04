@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 // services
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
@@ -12,7 +15,9 @@ import { ToastService } from 'src/app/core/services/toast.service';
   styleUrls: ['./settings.page.scss'],
   standalone: false,
 })
-export class SettingsPage implements OnInit {
+export class SettingsPage implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
+
   isEdit: boolean = false;
   uuid: string = '';
   settings = {
@@ -25,21 +30,37 @@ export class SettingsPage implements OnInit {
     private deviceService: DeviceService,
     private settingService: SettingService,
     private toastService: ToastService,
+    private route: ActivatedRoute,
   ) {}
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
-    this.checkIsNewUserProfile(this.uuid);
+    this.handleUserProfileUpdate(false);
+
+    this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe((params) => {
+      if (params['refresh']) {
+        this.handleUserProfileUpdate(true);
+      }
+    });
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
       this.settings = {
-        unit: updatedSetting.unit,
-        darkMode: updatedSetting.darkMode,
+        unit: updatedSetting && updatedSetting.unit ? updatedSetting.unit : 'china',
+        darkMode: updatedSetting && updatedSetting.darkMode ? updatedSetting.darkMode : false,
       };
 
       if (this.settings.darkMode) {
         document.body.classList.toggle('dark-theme', this.settings.darkMode);
       }
     });
+  }
+
+  private handleUserProfileUpdate(isRefresh: boolean) {
+    if (isRefresh) {
+      console.log('Triggered by refresh:', this.uuid);
+    } else {
+      console.log('Initial page load:', this.uuid);
+    }
+    this.checkIsNewUserProfile(this.uuid);
   }
 
   checkIsNewUserProfile(identifier: any) {
@@ -67,5 +88,10 @@ export class SettingsPage implements OnInit {
         this.toastService.info('Your setting has been updated successfully', 2000, 'bottom');
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

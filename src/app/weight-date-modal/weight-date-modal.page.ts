@@ -49,7 +49,6 @@ export class WeightDateModalPage implements OnInit {
     this.kilogramsUSAValues = poundsToKilogram.map((item) => item.value);
 
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-      console.log('unit: ' + updatedSetting.unit);
       this.weightOptions = this.generateKGWeightOptions(updatedSetting.unit);
       this.selectedWeight = updatedSetting.unit === 'usa' ? 24.04 : 25;
     });

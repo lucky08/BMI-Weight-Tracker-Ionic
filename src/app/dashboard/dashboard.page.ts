@@ -29,15 +29,25 @@ export class DashboardPage implements OnInit {
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
 
+    this.checkIsNewUserProfile();
+
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-      if (updatedSetting.darkMode) {
+      if (updatedSetting && updatedSetting.darkMode) {
         document.body.classList.toggle('dark-theme', updatedSetting.darkMode);
       }
     });
+  }
 
+  ionViewWillEnter() {
+    this.checkIsNewUserProfile();
+  }
+
+  checkIsNewUserProfile() {
     this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
       if (userProfile) {
         this.isEdit = true;
+      } else {
+        this.isEdit = false;
       }
     });
   }

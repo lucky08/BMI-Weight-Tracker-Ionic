@@ -59,23 +59,24 @@ export class UserProfilePage implements OnInit {
     });
 
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-      console.log('unit: ' + updatedSetting.unit);
-      this.heightOptions = this.generateCMHeightOptions(updatedSetting.unit);
+      this.heightOptions = this.generateCMHeightOptions(
+        updatedSetting && updatedSetting.unit ? updatedSetting.unit : 'china',
+      );
 
-      this.selectedHeight = updatedSetting.unit === 'usa' ? 162.56 : 165;
-      console.log('selectedHeight: ' + this.selectedHeight);
+      this.selectedHeight = updatedSetting && updatedSetting.unit === 'usa' ? 162.56 : 165;
 
       this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
         if (userProfile) {
           this.profileForm.patchValue({ age: userProfile.age });
 
           if (updatedSetting.unit === 'china') {
+            this.selectedHeight = userProfile.height;
             this.profileForm.patchValue({ height: userProfile.height });
           } else if (updatedSetting.unit === 'usa') {
             const closestUserProfileHeight = this.centimetersUSAValues.reduce((prev: any, curr: any) =>
               Math.abs(curr - userProfile.height) < Math.abs(prev - userProfile.height) ? curr : prev,
             );
-
+            this.selectedHeight = closestUserProfileHeight;
             this.profileForm.patchValue({ height: closestUserProfileHeight });
           }
 

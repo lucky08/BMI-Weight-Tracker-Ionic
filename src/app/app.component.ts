@@ -43,7 +43,9 @@ export class AppComponent implements OnInit {
               uuid: identifier,
             };
 
-            this.settingService.save(setting).subscribe();
+            this.settingService.save(setting).subscribe((res) => {
+              console.log('Setting has been saved successfully');
+            });
           }
         });
       }
