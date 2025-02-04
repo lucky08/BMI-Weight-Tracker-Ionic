@@ -27,9 +27,8 @@
         <ion-item class="item-row">
           <ion-label position="stacked">Select Date</ion-label>
           <ion-datetime
+            [max]="today"
             formControlName="date"
-            [presentation]="'date'"
-            presentation="date"
             [(ngModel)]="selectedDate"
             name="selectedDate"
             required

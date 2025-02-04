@@ -24,6 +24,7 @@ export class WeightDateModalPage implements OnInit {
   weightOptions: any;
   uuid: any;
   kilogramsUSAValues: any;
+  today: string;
 
   constructor(
     private fb: FormBuilder,
@@ -38,6 +39,9 @@ export class WeightDateModalPage implements OnInit {
       weight: ['', [Validators.required]],
       date: ['', [Validators.required]],
     });
+
+    const now = new Date();
+    this.today = now.toISOString().split('T')[0];
   }
 
   async ngOnInit() {
