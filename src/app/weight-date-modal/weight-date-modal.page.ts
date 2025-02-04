@@ -20,7 +20,7 @@ export class WeightDateModalPage implements OnInit {
   isEdit: boolean;
   weight: number | null = null;
   selectedDate: string | null = null;
-  selectedWeight: number = 55;
+  selectedWeight: number = 25;
   weightOptions: any;
   uuid: any;
   kilogramsUSAValues: any;
@@ -47,7 +47,7 @@ export class WeightDateModalPage implements OnInit {
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
       console.log('unit: ' + updatedSetting.unit);
       this.weightOptions = this.generateKGWeightOptions(updatedSetting.unit);
-      this.selectedWeight = updatedSetting.unit === 'usa' ? 54.43 : 55;
+      this.selectedWeight = updatedSetting.unit === 'usa' ? 24.04 : 25;
     });
   }
 

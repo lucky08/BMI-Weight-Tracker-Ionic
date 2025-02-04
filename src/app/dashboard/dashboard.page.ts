@@ -64,7 +64,7 @@ export class DashboardPage implements OnInit {
       if (detail !== null && detail.data.result !== 'closed') {
         const weightDate = {
           weight: detail.data.result.weight,
-          date: this.formatDate(detail.data.result),
+          date: detail.data.result.date,
         };
 
         console.log(weightDate);
@@ -74,8 +74,8 @@ export class DashboardPage implements OnInit {
     await modal.present();
   }
 
-  formatDate(dateTime: string): string {
+  /* formatDate(dateTime: string): string {
     const date = new Date(dateTime);
     return date.toISOString().split('T')[0];
-  }
+  }*/
 }
