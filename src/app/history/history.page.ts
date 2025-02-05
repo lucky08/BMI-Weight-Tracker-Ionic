@@ -8,10 +8,17 @@ import { Component } from '@angular/core';
 })
 export class HistoryPage {
   items = [
-    ['Date', 'Weight', 'BMI', 'Body Fat', 'Status'],
-    ['Jan 14, 2025', '73.6kg', '20.0', '23.50%', 'Normal'],
-    ['Jan 11, 2025', '74.4kg', '21.1', '22.30%', 'Normal'],
-    ['Jan 10, 2025', '75.5kg', '22.0', '21.41%', 'Normal'],
+    { date: 'Jan 14, 2025', weight: '73.6kg', bmi: '20.0', bodyFat: '23.50%', status: 'Normal' },
+    { date: 'Jan 11, 2025', weight: '74.4kg', bmi: '21.1', bodyFat: '22.30%', status: 'Normal' },
+    { date: 'Jan 10, 2025', weight: '75.5kg', bmi: '22.0', bodyFat: '21.41%', status: 'Normal' },
   ];
   constructor() {}
+
+  editRecord(index: number) {
+    console.log('index: ' + index);
+  }
+
+  deleteRecord(index: number) {
+    console.log('index: ' + index);
+  }
 }
