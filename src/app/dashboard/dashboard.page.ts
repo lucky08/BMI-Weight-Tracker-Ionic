@@ -7,6 +7,8 @@ import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal
 import { DeviceService } from 'src/app/core/services/device.service';
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { SettingService } from 'src/app/core/services/setting.service';
+import { WeightDateService } from 'src/app/core/services/weight-date.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +19,7 @@ import { SettingService } from 'src/app/core/services/setting.service';
 export class DashboardPage implements OnInit {
   uuid: any;
   isEdit: boolean = false;
+  userProfileId: any;
 
   constructor(
     private router: Router,
@@ -24,6 +27,8 @@ export class DashboardPage implements OnInit {
     private modalController: ModalController,
     private deviceService: DeviceService,
     private settingService: SettingService,
+    private weightDateService: WeightDateService,
+    private toastService: ToastService,
   ) {}
 
   async ngOnInit() {
@@ -46,6 +51,7 @@ export class DashboardPage implements OnInit {
     this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
       if (userProfile) {
         this.isEdit = true;
+        this.userProfileId = userProfile.id;
       } else {
         this.isEdit = false;
       }
@@ -74,10 +80,15 @@ export class DashboardPage implements OnInit {
       if (detail !== null && detail.data.result !== 'closed') {
         const weightDate = {
           weight: detail.data.result.weight,
-          date: detail.data.result.date,
+          dateTime: detail.data.result.dateTime,
+          userProfileId: this.userProfileId,
         };
-
-        console.log(weightDate);
+        console.log(JSON.stringify(weightDate));
+        this.weightDateService.save(weightDate).subscribe((createdWeightDate) => {
+          if (createdWeightDate) {
+            this.toastService.info('Your weight has been added successfully', 2000, 'bottom');
+          }
+        });
       }
     });
 

@@ -37,7 +37,7 @@ export class WeightDateModalPage implements OnInit {
 
     this.weightDateForm = this.fb.group({
       weight: ['', [Validators.required]],
-      date: ['', [Validators.required]],
+      dateTime: ['', [Validators.required]],
     });
 
     const now = new Date();
@@ -76,8 +76,8 @@ export class WeightDateModalPage implements OnInit {
 
   submitForm() {
     const data = {
-      weight: this.weight,
-      date: this.selectedDate,
+      weight: this.weightDateForm.value.weight,
+      dateTime: this.weightDateForm.value.dateTime,
     };
 
     this.modalController.dismiss({ result: data });

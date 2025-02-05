@@ -3,6 +3,6 @@ export interface UserProfile {
   userName: string;
   age: number;
   gender: string;
-  height: number;
+  height: any;
   uuid: string;
 }
