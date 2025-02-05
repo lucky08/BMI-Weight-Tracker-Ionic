@@ -2,8 +2,8 @@ export interface WeightDate {
   id?: number;
   weight: any;
   dateTime: any;
-  userProfileId: number;
+  userProfileId?: number;
   bmi?: any;
-  bodyFat?: any;
+  bodyFatPercentage?: any;
   status?: any;
 }

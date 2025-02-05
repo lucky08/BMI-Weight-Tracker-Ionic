@@ -1,27 +1,27 @@
-<ion-content>
+<ion-content *ngIf="histories && histories.length > 0 else noHistory">
   <table>
     <thead>
       <tr>
-        <th>Date</th>
+        <th>Date Time</th>
         <th>Weight</th>
         <th>BMI</th>
-        <th>Body Fat</th>
+        <th>Body Fat Percentage</th>
         <th>Status</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of items; let i = index">
-        <td>{{ item.date }}</td>
-        <td>{{ item.weight }}</td>
-        <td>{{ item.bmi }}</td>
-        <td>{{ item.bodyFat }}</td>
-        <td>{{ item.status }}</td>
+      <tr *ngFor="let history of histories; let i = index">
+        <td>{{ history.dateTime | date: 'MM/dd/yyyy HH:mm' }}</td>
+        <td>{{ history.weight }}</td>
+        <td>{{ history.bmi }}</td>
+        <td>{{ history.bodyFatPercentage }} %</td>
+        <td>{{ history.status }}</td>
         <td>
-          <ion-button color="primary" (click)="editRecord(i)">
+          <ion-button color="primary" (click)="editHistory(i)">
             <ion-icon name="create"></ion-icon>
           </ion-button>
-          <ion-button color="danger" (click)="deleteRecord(i)">
+          <ion-button color="danger" (click)="deleteHistory(i)">
             <ion-icon name="trash"></ion-icon>
           </ion-button>
         </td>
@@ -29,3 +29,6 @@
     </tbody>
   </table>
 </ion-content>
+<ng-template #noHistory>
+  <span class="warning-text">No history records so far. Please add your weight.</span>
+</ng-template>
