@@ -18,10 +18,10 @@
         <td>{{ item.bodyFat }}</td>
         <td>{{ item.status }}</td>
         <td>
-          <ion-button *ngIf="i > 0" color="primary" (click)="editRecord(i)">
+          <ion-button color="primary" (click)="editRecord(i)">
             <ion-icon name="create"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="i > 0" color="danger" (click)="deleteRecord(i)">
+          <ion-button color="danger" (click)="deleteRecord(i)">
             <ion-icon name="trash"></ion-icon>
           </ion-button>
         </td>
