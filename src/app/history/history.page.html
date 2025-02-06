@@ -13,7 +13,8 @@
     <tbody>
       <tr *ngFor="let history of histories; let i = index">
         <td>{{ history.dateTime | date: 'MM/dd/yyyy HH:mm' }}</td>
-        <td>{{ history.weight }} kg</td>
+        <td *ngIf="unit === 'china'">{{ history.weight }} kg</td>
+        <td *ngIf="unit === 'usa'">{{ history.weight }} lb</td>
         <td>{{ history.bmi }}</td>
         <td>{{ history.bodyFatPercentage }} %</td>
         <td>{{ history.status }}</td>

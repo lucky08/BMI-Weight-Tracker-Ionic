@@ -56,8 +56,12 @@ export class WeightDateModalPage implements OnInit {
 
       if (this.isEdit && this.originalWeightDateTime) {
         if (updatedSetting.unit === 'china') {
-          this.selectedWeight = this.originalWeightDateTime.weight;
-          this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
+          const roundWeight = Number.isInteger(this.originalWeightDateTime.weight)
+            ? this.originalWeightDateTime.weight
+            : Math.round(this.originalWeightDateTime.weight);
+          this.selectedWeight = roundWeight;
+
+          this.weightDateForm.patchValue({ weight: roundWeight });
         } else if (updatedSetting.unit === 'usa') {
           const closestUserWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
             Math.abs(curr - this.originalWeightDateTime.weight) < Math.abs(prev - this.originalWeightDateTime.weight)
@@ -84,7 +88,7 @@ export class WeightDateModalPage implements OnInit {
         options.push({ text: `${poundToKilogram.text} lb`, value: poundToKilogram.value });
       }
     } else if (unit === 'china') {
-      for (let i = 25; i <= 200; i++) {
+      for (let i = 20; i <= 200; i++) {
         options.push({ text: `${i} kg`, value: i });
       }
     }

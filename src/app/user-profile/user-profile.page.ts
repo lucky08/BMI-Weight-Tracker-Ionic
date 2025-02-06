@@ -70,8 +70,11 @@ export class UserProfilePage implements OnInit {
           this.profileForm.patchValue({ age: userProfile.age });
 
           if (updatedSetting.unit === 'china') {
-            this.selectedHeight = userProfile.height;
-            this.profileForm.patchValue({ height: userProfile.height });
+            const roundHeight = Number.isInteger(userProfile.height)
+              ? userProfile.height
+              : Math.round(userProfile.height);
+            this.selectedHeight = roundHeight;
+            this.profileForm.patchValue({ height: roundHeight });
           } else if (updatedSetting.unit === 'usa') {
             const closestUserProfileHeight = this.centimetersUSAValues.reduce((prev: any, curr: any) =>
               Math.abs(curr - userProfile.height) < Math.abs(prev - userProfile.height) ? curr : prev,

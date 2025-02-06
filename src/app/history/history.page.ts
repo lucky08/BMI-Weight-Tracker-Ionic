@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal.page';
+import { switchMap } from 'rxjs';
 
 // services
 import { WeightDateService } from 'src/app/core/services/weight-date.service';
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { SettingService } from 'src/app/core/services/setting.service';
 
 // constants
 import { WeightDate } from 'src/app/core/models/weight-date.model';
+import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
 @Component({
   selector: 'app-history',
@@ -20,6 +23,8 @@ import { WeightDate } from 'src/app/core/models/weight-date.model';
 export class HistoryPage implements OnInit {
   histories: WeightDate[] = [];
   uuid: any;
+  unit: string = 'china';
+  kilogramsUSAValues: any;
 
   constructor(
     private weightDateService: WeightDateService,
@@ -27,14 +32,29 @@ export class HistoryPage implements OnInit {
     private deviceService: DeviceService,
     private modalController: ModalController,
     private toastService: ToastService,
+    private settingService: SettingService,
   ) {}
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
+    this.kilogramsUSAValues = poundsToKilogram.map((item) => item.value);
 
     this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
       if (userProfile && typeof userProfile.id === 'number') {
         this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
+          this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
+            this.unit = updatedSetting.unit;
+            if (updatedSetting && updatedSetting.unit === 'usa') {
+              histories.map((history) => {
+                const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
+                  Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
+                );
+
+                history.weight = poundsToKilogram.filter((item) => item.value === closestHistoryWeight)[0].text;
+              });
+            }
+          });
+
           this.histories = histories;
         });
       }
