@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal.page';
-import { switchMap } from 'rxjs';
 
 // services
 import { WeightDateService } from 'src/app/core/services/weight-date.service';
@@ -33,6 +32,7 @@ export class HistoryPage implements OnInit {
     private modalController: ModalController,
     private toastService: ToastService,
     private settingService: SettingService,
+    private alertController: AlertController,
   ) {}
 
   async ngOnInit() {
@@ -102,7 +102,29 @@ export class HistoryPage implements OnInit {
     await modal.present();
   }
 
-  deleteHistory(index: number) {
-    console.log('index: ' + index);
+  async deleteHistory(index: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmation',
+      message: `Are you sure you want to delete this record?`,
+      cssClass: 'delete-alert',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.weightDateService.delete(index).subscribe((res) => {
+              if (res) {
+                this.histories = this.histories.filter((history) => history.id !== index);
+                this.toastService.info('Your history has been deleted successfully', 2000, 'bottom');
+              }
+            });
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 }
