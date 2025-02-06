@@ -110,11 +110,9 @@ export class DashboardPage implements OnInit, OnDestroy {
           });
 
           this.histories = histories;
-          /* this.latestHistory = histories.reduce((prev, current) =>
+          this.latestHistory = histories.reduce((prev, current) =>
             new Date(current.dateTime) > new Date(prev.dateTime) ? current : prev,
-          );*/
-
-          console.log(this.latestHistory);
+          );
         });
       }
     });
