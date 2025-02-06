@@ -44,15 +44,19 @@ export class HistoryPage implements OnInit {
         this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
           this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
             this.unit = updatedSetting.unit;
-            if (updatedSetting && updatedSetting.unit === 'usa') {
-              histories.map((history) => {
+
+            histories.map((history) => {
+              if (updatedSetting && updatedSetting.unit === 'usa') {
                 const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
                   Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
                 );
 
                 history.weight = poundsToKilogram.filter((item) => item.value === closestHistoryWeight)[0].text;
-              });
-            }
+              } else if (updatedSetting && updatedSetting.unit === 'china') {
+                const roundWeight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
+                history.weight = roundWeight;
+              }
+            });
           });
 
           this.histories = histories;
