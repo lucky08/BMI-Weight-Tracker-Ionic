@@ -18,6 +18,7 @@ import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 export class WeightDateModalPage implements OnInit {
   weightDateForm: FormGroup;
   isEdit: boolean;
+  originalWeightDateTime: any;
   weight: number | null = null;
   selectedDate: string | null = null;
   selectedWeight: number = 25;
@@ -34,6 +35,7 @@ export class WeightDateModalPage implements OnInit {
     private deviceService: DeviceService,
   ) {
     this.isEdit = this.navParams.get('isEdit');
+    this.originalWeightDateTime = this.navParams.get('originalWeightDateTime');
 
     this.weightDateForm = this.fb.group({
       weight: ['', [Validators.required]],
@@ -51,6 +53,26 @@ export class WeightDateModalPage implements OnInit {
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
       this.weightOptions = this.generateKGWeightOptions(updatedSetting.unit);
       this.selectedWeight = updatedSetting.unit === 'usa' ? 24.04 : 25;
+
+      if (this.isEdit && this.originalWeightDateTime) {
+        if (updatedSetting.unit === 'china') {
+          this.selectedWeight = this.originalWeightDateTime.weight;
+          this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
+        } else if (updatedSetting.unit === 'usa') {
+          const closestUserWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
+            Math.abs(curr - this.originalWeightDateTime.weight) < Math.abs(prev - this.originalWeightDateTime.weight)
+              ? curr
+              : prev,
+          );
+          this.selectedWeight = closestUserWeight;
+          this.weightDateForm.patchValue({ weight: closestUserWeight });
+        }
+      }
+
+      const dateString = this.originalWeightDateTime.dateTime;
+      const dateObj = new Date(dateString.replace(' ', 'T') + 'Z');
+      const isoString = dateObj.toISOString();
+      this.weightDateForm.patchValue({ dateTime: isoString });
     });
   }
 

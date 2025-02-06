@@ -13,15 +13,15 @@
     <tbody>
       <tr *ngFor="let history of histories; let i = index">
         <td>{{ history.dateTime | date: 'MM/dd/yyyy HH:mm' }}</td>
-        <td>{{ history.weight }}</td>
+        <td>{{ history.weight }} kg</td>
         <td>{{ history.bmi }}</td>
         <td>{{ history.bodyFatPercentage }} %</td>
         <td>{{ history.status }}</td>
         <td>
-          <ion-button color="primary" (click)="editHistory(i)">
+          <ion-button *ngIf="history.id" color="primary" (click)="editHistory(history.id)">
             <ion-icon name="create"></ion-icon>
           </ion-button>
-          <ion-button color="danger" (click)="deleteHistory(i)">
+          <ion-button *ngIf="history.id" color="danger" (click)="deleteHistory(history.id)">
             <ion-icon name="trash"></ion-icon>
           </ion-button>
         </td>

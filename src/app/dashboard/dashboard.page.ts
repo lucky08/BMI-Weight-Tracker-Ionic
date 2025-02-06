@@ -66,11 +66,11 @@ export class DashboardPage implements OnInit {
     this.router.navigate(['/tabs/dashboard/body-fat-percentage-detail']);
   }
 
-  async onAddWeight(isEdit: boolean) {
+  async onAddWeight() {
     const modal = await this.modalController.create({
       component: WeightDateModalPage, // open Modal page
       componentProps: {
-        isEdit: isEdit,
+        isEdit: false,
       },
       breakpoints: [0, 1],
       initialBreakpoint: 1,
@@ -83,7 +83,7 @@ export class DashboardPage implements OnInit {
           dateTime: detail.data.result.dateTime,
           userProfileId: this.userProfileId,
         };
-        console.log(JSON.stringify(weightDate));
+
         this.weightDateService.save(weightDate).subscribe((createdWeightDate) => {
           if (createdWeightDate) {
             this.toastService.info('Your weight has been added successfully', 2000, 'bottom');
@@ -94,9 +94,4 @@ export class DashboardPage implements OnInit {
 
     await modal.present();
   }
-
-  /* formatDate(dateTime: string): string {
-    const date = new Date(dateTime);
-    return date.toISOString().split('T')[0];
-  }*/
 }
