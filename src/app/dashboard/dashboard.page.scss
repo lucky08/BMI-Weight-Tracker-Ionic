@@ -13,6 +13,14 @@
 ion-card {
   flex: 1;
   cursor: pointer;
+  min-height: 130px;
+}
+
+ion-card-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .card-content {

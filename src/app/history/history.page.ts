@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal.page';
+
+// rxjs
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
