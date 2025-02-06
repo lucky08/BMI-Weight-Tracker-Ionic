@@ -39,6 +39,10 @@ export class HistoryPage implements OnInit {
     this.uuid = await this.deviceService.getDeviceId();
     this.kilogramsUSAValues = poundsToKilogram.map((item) => item.value);
 
+    this.reloadPage();
+  }
+
+  reloadPage() {
     this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
       if (userProfile && typeof userProfile.id === 'number') {
         this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
@@ -80,6 +84,7 @@ export class HistoryPage implements OnInit {
     modal.onDidDismiss().then((detail) => {
       if (detail !== null && detail.data.result !== 'closed') {
         const weightDate = {
+          id: originalWeightDateTime && originalWeightDateTime.id,
           weight: detail.data.result.weight,
           dateTime: detail.data.result.dateTime,
           userProfileId: originalWeightDateTime && originalWeightDateTime.userProfileId,
@@ -88,6 +93,7 @@ export class HistoryPage implements OnInit {
         this.weightDateService.update(weightDate).subscribe((createdWeightDate) => {
           if (createdWeightDate) {
             this.toastService.info('Your weight has been updated successfully', 2000, 'bottom');
+            this.reloadPage();
           }
         });
       }
