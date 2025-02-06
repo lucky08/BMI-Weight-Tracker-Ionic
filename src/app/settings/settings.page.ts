@@ -8,6 +8,7 @@ import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { EventService } from 'src/app/core/services/event.service';
 
 @Component({
   selector: 'app-settings',
@@ -30,6 +31,7 @@ export class SettingsPage implements OnInit, OnDestroy {
     private deviceService: DeviceService,
     private settingService: SettingService,
     private toastService: ToastService,
+    private eventService: EventService,
     private route: ActivatedRoute,
   ) {}
 
@@ -86,6 +88,7 @@ export class SettingsPage implements OnInit, OnDestroy {
     this.settingService.update(updatedSetting).subscribe((updatedSetting) => {
       if (updatedSetting) {
         this.toastService.info('Your setting has been updated successfully', 2000, 'bottom');
+        this.eventService.triggerReloadHistories();
       }
     });
   }

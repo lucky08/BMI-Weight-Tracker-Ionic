@@ -9,6 +9,7 @@ import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { SettingService } from 'src/app/core/services/setting.service';
 import { WeightDateService } from 'src/app/core/services/weight-date.service';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { EventService } from 'src/app/core/services/event.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,7 @@ export class DashboardPage implements OnInit {
     private settingService: SettingService,
     private weightDateService: WeightDateService,
     private toastService: ToastService,
+    private eventService: EventService,
   ) {}
 
   async ngOnInit() {
@@ -87,6 +89,7 @@ export class DashboardPage implements OnInit {
         this.weightDateService.save(weightDate).subscribe((createdWeightDate) => {
           if (createdWeightDate) {
             this.toastService.info('Your weight has been added successfully', 2000, 'bottom');
+            this.eventService.triggerReloadHistories();
           }
         });
       }

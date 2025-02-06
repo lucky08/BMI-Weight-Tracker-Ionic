@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal.page';
+import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 // services
 import { WeightDateService } from 'src/app/core/services/weight-date.service';
@@ -8,6 +10,7 @@ import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { SettingService } from 'src/app/core/services/setting.service';
+import { EventService } from 'src/app/core/services/event.service';
 
 // constants
 import { WeightDate } from 'src/app/core/models/weight-date.model';
@@ -19,11 +22,12 @@ import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
   styleUrls: ['history.page.scss'],
   standalone: false,
 })
-export class HistoryPage implements OnInit {
+export class HistoryPage implements OnInit, OnDestroy {
   histories: WeightDate[] = [];
   uuid: any;
   unit: string = 'china';
   kilogramsUSAValues: any;
+  private historiesSubscription!: Subscription;
 
   constructor(
     private weightDateService: WeightDateService,
@@ -33,13 +37,19 @@ export class HistoryPage implements OnInit {
     private toastService: ToastService,
     private settingService: SettingService,
     private alertController: AlertController,
+    private eventService: EventService,
   ) {}
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
     this.kilogramsUSAValues = poundsToKilogram.map((item) => item.value);
 
-    this.reloadPage();
+    this.historiesSubscription = this.eventService
+      .getReloadHistories()
+      .pipe(startWith(null))
+      .subscribe(() => {
+        this.reloadPage();
+      });
   }
 
   reloadPage() {
@@ -126,5 +136,9 @@ export class HistoryPage implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+  ngOnDestroy() {
+    this.historiesSubscription.unsubscribe();
   }
 }

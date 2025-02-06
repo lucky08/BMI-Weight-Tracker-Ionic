@@ -8,6 +8,7 @@ import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { DeviceService } from 'src/app/core/services/device.service';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { SettingService } from 'src/app/core/services/setting.service';
+import { EventService } from 'src/app/core/services/event.service';
 
 // constants
 import { feetToCentimeters } from 'src/app/shared/constants/feet-to-centimeters';
@@ -37,6 +38,7 @@ export class UserProfilePage implements OnInit {
     private deviceService: DeviceService,
     private settingService: SettingService,
     private toastService: ToastService,
+    private eventService: EventService,
     private route: ActivatedRoute,
   ) {
     this.profileForm = this.fb.group({
@@ -128,6 +130,7 @@ export class UserProfilePage implements OnInit {
         this.userProfileService.save(userProfile).subscribe((createdUserProfile) => {
           if (createdUserProfile) {
             this.toastService.info('Your profile has been created successfully', 3000, 'bottom');
+            this.eventService.triggerReloadHistories();
             this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
           }
         });
@@ -135,6 +138,7 @@ export class UserProfilePage implements OnInit {
         this.userProfileService.update(userProfile).subscribe((updatedUserProfile) => {
           if (updatedUserProfile) {
             this.toastService.info('Your profile has been updated successfully', 3000, 'bottom');
+            this.eventService.triggerReloadHistories();
             this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
           }
         });

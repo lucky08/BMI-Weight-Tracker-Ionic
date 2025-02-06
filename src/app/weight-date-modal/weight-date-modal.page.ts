@@ -71,12 +71,12 @@ export class WeightDateModalPage implements OnInit {
           this.selectedWeight = closestUserWeight;
           this.weightDateForm.patchValue({ weight: closestUserWeight });
         }
-      }
 
-      const dateString = this.originalWeightDateTime.dateTime;
-      const dateObj = new Date(dateString.replace(' ', 'T') + 'Z');
-      const isoString = dateObj.toISOString();
-      this.weightDateForm.patchValue({ dateTime: isoString });
+        const dateString = this.originalWeightDateTime.dateTime;
+        const dateObj = new Date(dateString.replace(' ', 'T') + 'Z');
+        const isoString = dateObj.toISOString();
+        this.weightDateForm.patchValue({ dateTime: isoString });
+      }
     });
   }
 
