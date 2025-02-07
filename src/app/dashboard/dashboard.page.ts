@@ -59,12 +59,6 @@ export class DashboardPage implements OnInit, OnDestroy {
 
     this.checkIsNewUserProfile();
 
-    this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-      if (updatedSetting && updatedSetting.darkMode) {
-        document.body.classList.toggle('dark-theme', updatedSetting.darkMode);
-      }
-    });
-
     this.historiesSubscription = this.eventService
       .getReloadHistories()
       .pipe(startWith(null))

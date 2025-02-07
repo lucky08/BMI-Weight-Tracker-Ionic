@@ -20,6 +20,12 @@ export class AppComponent implements OnInit {
     const identifier = await this.deviceService.getDeviceId();
     const info = await this.deviceService.getDeviceInfo();
 
+    this.settingService.getByUuid(identifier).subscribe((updatedSetting) => {
+      if (updatedSetting && updatedSetting.darkMode) {
+        document.body.classList.toggle('dark-theme', updatedSetting.darkMode);
+      }
+    });
+
     this.deviceService.getByUuid(identifier).subscribe((device) => {
       console.log(!device);
       if (!device) {
