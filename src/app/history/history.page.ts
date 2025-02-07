@@ -59,45 +59,37 @@ export class HistoryPage implements OnInit, OnDestroy {
     this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
       if (userProfile && typeof userProfile.id === 'number') {
         this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
+          histories.sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()); //sort by dateTime
+
           this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
             this.unit = updatedSetting.unit;
-            this.allKilogramsHistories = histories.map((item) => ({ ...item })); // deep code histories array
+            this.allKilogramsHistories = histories.map((item) => ({ ...item })); //deep copy array
 
-            this.allKilogramsHistories.map((kilogramHistory) => {
-              if (updatedSetting && updatedSetting.unit === 'usa') {
-                const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-                  Math.abs(curr - kilogramHistory.weight) < Math.abs(prev - kilogramHistory.weight) ? curr : prev,
-                );
+            this.allKilogramsHistories.forEach((history) => this.convertWeight(history, updatedSetting));
+            histories.forEach((history) => this.convertWeight(history, updatedSetting, true));
 
-                kilogramHistory.weight = poundsToKilogram.filter(
-                  (item) => item.value === closestHistoryWeight,
-                )[0].value;
-              } else if (updatedSetting && updatedSetting.unit === 'china') {
-                const roundWeight = Number.isInteger(kilogramHistory.weight)
-                  ? kilogramHistory.weight
-                  : Math.round(kilogramHistory.weight);
-                kilogramHistory.weight = roundWeight;
-              }
-            });
-
-            histories.map((history) => {
-              if (updatedSetting && updatedSetting.unit === 'usa') {
-                const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-                  Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
-                );
-
-                history.weight = poundsToKilogram.filter((item) => item.value === closestHistoryWeight)[0].text;
-              } else if (updatedSetting && updatedSetting.unit === 'china') {
-                const roundWeight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
-                history.weight = roundWeight;
-              }
-            });
+            this.histories = histories;
           });
-
-          this.histories = histories;
         });
       }
     });
+  }
+
+  convertWeight(history: any, updatedSetting: any, isTextFormat: boolean = false) {
+    if (!updatedSetting) return;
+
+    if (updatedSetting.unit === 'usa') {
+      const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
+        Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
+      );
+
+      const matchedWeight = poundsToKilogram.find((item) => item.value === closestHistoryWeight);
+      if (matchedWeight) {
+        history.weight = isTextFormat ? matchedWeight.text : matchedWeight.value;
+      }
+    } else if (updatedSetting.unit === 'china') {
+      history.weight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
+    }
   }
 
   async editHistory(index: number) {
