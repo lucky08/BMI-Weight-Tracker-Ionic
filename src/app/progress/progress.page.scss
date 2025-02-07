@@ -28,11 +28,11 @@ ion-tab-button[tab='weight'] {
 }
 
 ion-tab-button[tab='bmi'] {
-  background-color: #4caf50;
+  background-color: #318734;
 }
 
 ion-tab-button[tab='bodyFat'] {
-  background-color: #2196f3;
+  background-color: #1663a1;
 }
 
 ion-tab-button:hover {
@@ -41,4 +41,14 @@ ion-tab-button:hover {
 
 ion-tab-button.ion-activated {
   border-bottom: 2px solid white;
+}
+
+ion-content {
+  --padding-top: 56px;
+}
+
+.selected-segment {
+  background-color: rgb(100, 76, 10) !important;
+  color: white !important;
+  border-radius: 8px;
 }

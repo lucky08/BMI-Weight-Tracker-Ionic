@@ -1,4 +1,18 @@
 <ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <ion-segment (ionChange)="updateSegment($event)">
+        <ion-segment-button
+          *ngFor="let dateOption of dateOptions"
+          [value]="dateOption.value"
+          [ngClass]="{'selected-segment': selectedSegment === dateOption.value}"
+        >
+          <ion-label>{{ dateOption.label }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-header>
+
   <ion-tabs>
     <ion-tab-bar slot="top">
       <ion-tab-button tab="weight" (click)="setSelectedTab('weight')">
@@ -13,7 +27,9 @@
     </ion-tab-bar>
 
     <ion-tab class="chart-container">
-      <app-progress-chart [chartData]="chartData"></app-progress-chart>
+      <ion-content>
+        <app-progress-chart [chartData]="chartData"></app-progress-chart>
+      </ion-content>
     </ion-tab>
   </ion-tabs>
 </ion-content>
