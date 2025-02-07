@@ -55,22 +55,7 @@ export class WeightDateModalPage implements OnInit {
       this.selectedWeight = updatedSetting.unit === 'usa' ? 24.04 : 25;
 
       if (this.isEdit && this.originalWeightDateTime) {
-        if (updatedSetting.unit === 'china') {
-          const roundWeight = Number.isInteger(this.originalWeightDateTime.weight)
-            ? this.originalWeightDateTime.weight
-            : Math.round(this.originalWeightDateTime.weight);
-          this.selectedWeight = roundWeight;
-
-          this.weightDateForm.patchValue({ weight: roundWeight });
-        } else if (updatedSetting.unit === 'usa') {
-          const closestUserWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-            Math.abs(curr - this.originalWeightDateTime.weight) < Math.abs(prev - this.originalWeightDateTime.weight)
-              ? curr
-              : prev,
-          );
-          this.selectedWeight = closestUserWeight;
-          this.weightDateForm.patchValue({ weight: closestUserWeight });
-        }
+        this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
 
         const dateString = this.originalWeightDateTime.dateTime;
         const dateObj = new Date(dateString.replace(' ', 'T') + 'Z');

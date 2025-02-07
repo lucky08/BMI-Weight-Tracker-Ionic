@@ -29,6 +29,7 @@ export class HistoryPage implements OnInit, OnDestroy {
   uuid: any;
   unit: string = 'china';
   kilogramsUSAValues: any;
+  allKilogramsHistories: WeightDate[] = [];
   private historiesSubscription!: Subscription;
 
   constructor(
@@ -60,6 +61,24 @@ export class HistoryPage implements OnInit, OnDestroy {
         this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
           this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
             this.unit = updatedSetting.unit;
+            this.allKilogramsHistories = histories.map((item) => ({ ...item })); // deep code histories array
+
+            this.allKilogramsHistories.map((kilogramHistory) => {
+              if (updatedSetting && updatedSetting.unit === 'usa') {
+                const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
+                  Math.abs(curr - kilogramHistory.weight) < Math.abs(prev - kilogramHistory.weight) ? curr : prev,
+                );
+
+                kilogramHistory.weight = poundsToKilogram.filter(
+                  (item) => item.value === closestHistoryWeight,
+                )[0].value;
+              } else if (updatedSetting && updatedSetting.unit === 'china') {
+                const roundWeight = Number.isInteger(kilogramHistory.weight)
+                  ? kilogramHistory.weight
+                  : Math.round(kilogramHistory.weight);
+                kilogramHistory.weight = roundWeight;
+              }
+            });
 
             histories.map((history) => {
               if (updatedSetting && updatedSetting.unit === 'usa') {
@@ -82,7 +101,8 @@ export class HistoryPage implements OnInit, OnDestroy {
   }
 
   async editHistory(index: number) {
-    const originalWeightDateTime = this.histories.filter((history) => history.id === index)[0];
+    const originalWeightDateTime = this.allKilogramsHistories.filter((history) => history.id === index)[0];
+
     const modal = await this.modalController.create({
       component: WeightDateModalPage, // open Modal page
       componentProps: {
