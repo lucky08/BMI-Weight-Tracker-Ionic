@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { ChartData } from 'chart.js';
+import { ChartConfiguration, ChartOptions, ChartData } from 'chart.js';
 
 @Component({
   selector: 'app-progress-chart',
@@ -20,23 +19,7 @@ export class ProgressChartComponent implements OnChanges {
   };
 
   // Chart options
-  public lineChartOptions: ChartOptions<'line'> = {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: false,
-      },
-    },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-        onClick: (e: any) => {
-          e.stopImmediatePropagation();
-        }, // when clicking ion-segement, hide the line chart
-      },
-    },
-  };
+  @Input() lineChartOptions: ChartOptions<'line'> = {};
 
   constructor() {}
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartData } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 
 // services
 import { DeviceService } from 'src/app/core/services/device.service';
@@ -36,24 +36,44 @@ export class ProgressPage implements OnInit {
     { value: '3m', label: 'Three Months' },
     { value: '6m', label: 'Six Months' },
     { value: '1y', label: 'One Year' },
+    { value: 'all', label: 'All' },
   ];
 
+  // data: any;
   data = {
-    dates: ['Jan 14, 2025', 'Jan 11, 2025', 'Jan 10, 2025'],
+    dates: [],
     datasets: [
       {
         label: 'weight',
-        data: [73.6, 74.4, 75.5],
+        data: [],
       },
       {
         label: 'bmi',
-        data: [20.0, 21.1, 22.0],
+        data: [],
       },
       {
         label: 'bodyFat',
-        data: [23.5, 22.3, 21.41],
+        data: [],
       },
     ],
+  };
+
+  lineChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        onClick: (e: any) => {
+          e.stopImmediatePropagation();
+        },
+      },
+    },
   };
 
   constructor(
@@ -67,7 +87,7 @@ export class ProgressPage implements OnInit {
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
-
+    this.lineChartOptions = this.getChartOptions();
     this.reloadPage();
   }
 
@@ -93,6 +113,7 @@ export class ProgressPage implements OnInit {
           });
 
           this.histories = histories;
+          this.data = this.transformHistoryData(this.histories);
         });
       }
     });
@@ -105,19 +126,6 @@ export class ProgressPage implements OnInit {
   updateChartData(selectedTab: string) {
     this.selectedTab = selectedTab;
     this.filterDataByTimeRange();
-    /* const selectedDataset = this.data.datasets.find((dataset) => dataset.label === selectedTab);
-    if (selectedDataset) {
-      this.chartData = {
-        labels: this.data.dates, // reuse labels
-        datasets: [
-          {
-            ...selectedDataset, // include label and data
-          },
-        ],
-      };
-    } else {
-      console.error('Invalid tab selected:', this.selectedTab);
-    } */
   }
 
   updateSegment(event: any) {
@@ -126,41 +134,119 @@ export class ProgressPage implements OnInit {
   }
 
   filterDataByTimeRange() {
-    const allDates = this.data.dates;
+    const allDates = this.data.dates.map((date) => new Date(date));
     const selectedDataset = this.data.datasets.find((dataset) => dataset.label === this.selectedTab);
     if (!selectedDataset) {
-      console.error('Invalid tab selected:', this.selectedTab);
       return;
     }
 
-    let numPoints;
+    let numDays;
     switch (this.selectedSegment) {
       case '1w':
-        numPoints = 3;
-        break; // 最近3天
+        numDays = 7;
+        break;
       case '1m':
-        numPoints = 5;
-        break; // 最近5天
+        numDays = 30;
+        break;
       case '3m':
-        numPoints = 6;
-        break; // 最近6天
+        numDays = 90;
+        break;
       case '6m':
-        numPoints = 7;
-        break; // 最近7天
+        numDays = 180;
+        break;
       case '1y':
-        numPoints = allDates.length;
-        break; // 显示全部数据
+        numDays = 365;
+        break;
       default:
-        numPoints = allDates.length;
+        numDays = Infinity;
     }
 
-    // 取最新的 numPoints 个数据点
-    const filteredDates = allDates.slice(0, numPoints);
-    const filteredData = selectedDataset.data.slice(0, numPoints);
+    let filteredIndexes: number[];
+    if (numDays !== Infinity) {
+      const today = new Date();
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - numDays);
+
+      filteredIndexes = allDates
+        .map((date, index) => ({ date, index }))
+        .filter((item) => item.date >= startDate)
+        .map((item) => item.index);
+    } else {
+      filteredIndexes = allDates.map((_, index: number) => index);
+    }
+
+    const filteredDates = filteredIndexes.map((index) => this.data.dates[index]);
+    const filteredData = filteredIndexes.map((index) => selectedDataset.data[index]);
 
     this.chartData = {
       labels: filteredDates,
       datasets: [{ label: this.selectedTab, data: filteredData }],
+    };
+  }
+
+  transformHistoryData(histories: any[]): any {
+    histories.sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime());
+
+    return {
+      dates: histories.map((h) =>
+        new Date(h.dateTime).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      ),
+      datasets: [
+        {
+          label: 'weight',
+          data: histories.map((h) => h.weight),
+        },
+        {
+          label: 'bmi',
+          data: histories.map((h) => parseFloat(h.bmi)),
+        },
+        {
+          label: 'bodyFat',
+          data: histories.map((h) => parseFloat(h.bodyFatPercentage)),
+        },
+      ],
+    };
+  }
+
+  public getChartOptions(): ChartOptions<'line'> {
+    // 定义 X 轴的配置
+    const xAxisOptions = {
+      x: {
+        ticks: {
+          callback: (value: any, index: number, values: any[]) => {
+            // 根据索引获取对应的日期字符串
+            const labelStr = this.data.dates[index];
+            if (!labelStr) {
+              return '';
+            }
+            const labelDate = new Date(labelStr);
+
+            switch (this.selectedSegment) {
+              case '1w': // 例如每两天显示一个
+                return index % 2 === 0 ? labelDate.toLocaleDateString() : '';
+              case '1m': // 每 7 天显示一个
+                return index % 7 === 0 ? labelDate.toLocaleDateString() : '';
+              case '3m': // 每个月1号显示
+              case '6m': // 每个月1号显示
+                return labelDate.getDate() === 1 ? labelDate.toLocaleDateString() : '';
+              case '1y': // 每 3 个月显示一次
+                return [0, 3, 6, 9].includes(labelDate.getMonth()) ? labelDate.toLocaleDateString() : '';
+              default: // All 或其他情况，每年显示一次（比如1月1日）
+                return labelDate.getMonth() === 0 && labelDate.getDate() === 1
+                  ? labelDate.getFullYear().toString()
+                  : '';
+            }
+          },
+        },
+      },
+    };
+
+    return {
+      ...this.lineChartOptions,
+      scales: {
+        ...this.lineChartOptions.scales,
+        ...xAxisOptions,
+      },
     };
   }
 }
