@@ -87,7 +87,6 @@ export class ProgressPage implements OnInit {
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
-    this.lineChartOptions = this.getChartOptions();
     this.reloadPage();
   }
 
@@ -164,8 +163,12 @@ export class ProgressPage implements OnInit {
     let filteredIndexes: number[];
     if (numDays !== Infinity) {
       const today = new Date();
+      console.log('today:' + JSON.stringify(today));
       const startDate = new Date(today);
+
       startDate.setDate(today.getDate() - numDays);
+      console.log('startDate:' + JSON.stringify(startDate));
+      console.log('allDates:' + JSON.stringify(allDates));
 
       filteredIndexes = allDates
         .map((date, index) => ({ date, index }))
@@ -174,14 +177,18 @@ export class ProgressPage implements OnInit {
     } else {
       filteredIndexes = allDates.map((_, index: number) => index);
     }
+    console.log('filteredIndexes:' + JSON.stringify(filteredIndexes));
 
     const filteredDates = filteredIndexes.map((index) => this.data.dates[index]);
     const filteredData = filteredIndexes.map((index) => selectedDataset.data[index]);
-
+    console.log('filteredDates:' + JSON.stringify(filteredDates));
+    console.log('filteredData:' + JSON.stringify(filteredData));
     this.chartData = {
       labels: filteredDates,
       datasets: [{ label: this.selectedTab, data: filteredData }],
     };
+
+    this.lineChartOptions = this.getChartOptions(filteredDates);
   }
 
   transformHistoryData(histories: any[]): any {
@@ -208,33 +215,71 @@ export class ProgressPage implements OnInit {
     };
   }
 
-  public getChartOptions(): ChartOptions<'line'> {
-    // 定义 X 轴的配置
+  public getChartOptions(filteredDates: string[]): ChartOptions<'line'> {
+    const displayedDates = new Set<string>();
+    const displayedYears = new Set<number>();
+
     const xAxisOptions = {
       x: {
         ticks: {
           callback: (value: any, index: number, values: any[]) => {
-            // 根据索引获取对应的日期字符串
-            const labelStr = this.data.dates[index];
+            const labelStr = filteredDates[index];
+            console.log('labelStr:' + JSON.stringify(labelStr));
             if (!labelStr) {
               return '';
             }
             const labelDate = new Date(labelStr);
+            console.log('labelDate:' + JSON.stringify(labelDate));
+
+            const dateStr = labelDate.toLocaleDateString();
+            const year = labelDate.getFullYear();
+
+            if (displayedDates.has(dateStr)) {
+              return '';
+            }
 
             switch (this.selectedSegment) {
-              case '1w': // 例如每两天显示一个
-                return index % 2 === 0 ? labelDate.toLocaleDateString() : '';
-              case '1m': // 每 7 天显示一个
-                return index % 7 === 0 ? labelDate.toLocaleDateString() : '';
-              case '3m': // 每个月1号显示
-              case '6m': // 每个月1号显示
-                return labelDate.getDate() === 1 ? labelDate.toLocaleDateString() : '';
-              case '1y': // 每 3 个月显示一次
-                return [0, 3, 6, 9].includes(labelDate.getMonth()) ? labelDate.toLocaleDateString() : '';
-              default: // All 或其他情况，每年显示一次（比如1月1日）
-                return labelDate.getMonth() === 0 && labelDate.getDate() === 1
-                  ? labelDate.getFullYear().toString()
-                  : '';
+              case '1w': // every two days
+                if (index % 2 === 0) {
+                  displayedDates.add(dateStr);
+                  return dateStr;
+                }
+                return '';
+
+              case '1m': // every seven days
+                if (index % 7 === 0) {
+                  displayedDates.add(dateStr);
+                  return dateStr;
+                }
+                return '';
+
+              case '3m': //every month
+              case '6m':
+                if (labelDate.getDate() === 1) {
+                  displayedDates.add(dateStr);
+                  return dateStr;
+                }
+                return '';
+
+              case '1y': // every three months
+                if ([0, 3, 6, 9].includes(labelDate.getMonth())) {
+                  displayedDates.add(dateStr);
+                  return dateStr;
+                }
+                return '';
+
+              default: // every year
+                if (labelDate.getMonth() === 0 && labelDate.getDate() === 1) {
+                  displayedDates.add(dateStr);
+                  displayedYears.add(year);
+                  return year.toString();
+                }
+                if (!displayedYears.has(year)) {
+                  displayedDates.add(dateStr);
+                  displayedYears.add(year);
+                  return dateStr;
+                }
+                return '';
             }
           },
         },
