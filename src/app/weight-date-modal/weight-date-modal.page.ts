@@ -58,8 +58,7 @@ export class WeightDateModalPage implements OnInit {
         this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
 
         const dateString = this.originalWeightDateTime.dateTime;
-        const dateObj = new Date(dateString.replace(' ', 'T') + 'Z');
-        const isoString = dateObj.toISOString();
+        const isoString = this.convertDateTimeFromOriginalToISOString(dateString);
         this.weightDateForm.patchValue({ dateTime: isoString });
       }
     });
@@ -88,9 +87,24 @@ export class WeightDateModalPage implements OnInit {
   submitForm() {
     const data = {
       weight: this.weightDateForm.value.weight,
-      dateTime: this.weightDateForm.value.dateTime,
+      dateTime: this.convertDateTimeFromISOStringToOriginal(this.weightDateForm.value.dateTime),
     };
 
     this.modalController.dismiss({ result: data });
+  }
+
+  convertDateTimeFromISOStringToOriginal(stringDate: any) {
+    const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
+    if (isoRegex.test(stringDate)) {
+      return stringDate.split('.')[0];
+    }
+
+    return stringDate;
+  }
+
+  convertDateTimeFromOriginalToISOString(originalDate: any) {
+    const dateObj = new Date(originalDate.replace(' ', 'T') + 'Z');
+    return dateObj.toISOString();
   }
 }
