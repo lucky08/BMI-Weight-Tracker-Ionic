@@ -81,9 +81,7 @@ export class ProgressPage implements OnInit {
     private deviceService: DeviceService,
     private weightDateService: WeightDateService,
     private settingService: SettingService,
-  ) {
-    this.updateChartData(this.selectedTab);
-  }
+  ) {}
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
@@ -113,6 +111,7 @@ export class ProgressPage implements OnInit {
 
           this.histories = histories;
           this.data = this.transformHistoryData(this.histories);
+          this.updateChartData(this.selectedTab);
         });
       }
     });
