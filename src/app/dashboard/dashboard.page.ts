@@ -142,6 +142,7 @@ export class DashboardPage implements OnInit, OnDestroy {
           if (createdWeightDate) {
             this.toastService.info('Your weight has been added successfully', 2000, 'bottom');
             this.eventService.triggerReloadHistories();
+            this.eventService.triggerReloadProgresses();
           }
         });
       }

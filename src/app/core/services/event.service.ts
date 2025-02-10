@@ -6,6 +6,7 @@ import { Subject, Observable } from 'rxjs';
 })
 export class EventService {
   private reloadHistoriesSubject = new Subject<void>();
+  private reloadProgressesSubject = new Subject<void>();
 
   triggerReloadHistories() {
     this.reloadHistoriesSubject.next();
@@ -13,5 +14,13 @@ export class EventService {
 
   getReloadHistories(): Observable<void> {
     return this.reloadHistoriesSubject.asObservable();
+  }
+
+  triggerReloadProgresses() {
+    this.reloadProgressesSubject.next();
+  }
+
+  getReloadProgresses(): Observable<void> {
+    return this.reloadProgressesSubject.asObservable();
   }
 }

@@ -89,6 +89,7 @@ export class SettingsPage implements OnInit, OnDestroy {
       if (updatedSetting) {
         this.toastService.info('Your setting has been updated successfully', 2000, 'bottom');
         this.eventService.triggerReloadHistories();
+        this.eventService.triggerReloadProgresses();
       }
     });
   }

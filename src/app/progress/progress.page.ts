@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 
+// rxjs
+import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
+
 // services
 import { DeviceService } from 'src/app/core/services/device.service';
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { WeightDateService } from 'src/app/core/services/weight-date.service';
 import { SettingService } from 'src/app/core/services/setting.service';
+import { EventService } from 'src/app/core/services/event.service';
 
 // constants
 import { WeightDate } from 'src/app/core/models/weight-date.model';
@@ -26,7 +31,7 @@ export class ProgressPage implements OnInit {
     labels: [],
     datasets: [],
   };
-
+  private progressSubscription!: Subscription;
   selectedTab: string = 'weight';
   selectedSegment: string = '1w';
   // Items for chart data
@@ -81,11 +86,19 @@ export class ProgressPage implements OnInit {
     private deviceService: DeviceService,
     private weightDateService: WeightDateService,
     private settingService: SettingService,
+    private eventService: EventService,
   ) {}
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
-    this.reloadPage();
+    this.kilogramsUSAValues = poundsToKilogram.map((item) => item.value);
+    this.progressSubscription = this.eventService
+      .getReloadProgresses()
+      .pipe(startWith(null))
+      .subscribe(() => {
+        console.log('111');
+        this.reloadPage();
+      });
   }
 
   reloadPage() {
@@ -97,21 +110,24 @@ export class ProgressPage implements OnInit {
 
             histories.map((history) => {
               if (updatedSetting && updatedSetting.unit === 'usa') {
+                console.log(updatedSetting.unit);
                 const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
                   Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
                 );
 
                 history.weight = poundsToKilogram.filter((item) => item.value === closestHistoryWeight)[0].text;
+                console.log('history weight: ' + history.weight);
               } else if (updatedSetting && updatedSetting.unit === 'china') {
+                console.log(updatedSetting.unit);
                 const roundWeight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
                 history.weight = roundWeight;
               }
             });
-          });
 
-          this.histories = histories;
-          this.data = this.transformHistoryData(this.histories);
-          this.updateChartData(this.selectedTab);
+            this.histories = histories;
+            this.data = this.transformHistoryData(this.histories);
+            this.updateChartData(this.selectedTab);
+          });
         });
       }
     });
@@ -162,12 +178,9 @@ export class ProgressPage implements OnInit {
     let filteredIndexes: number[];
     if (numDays !== Infinity) {
       const today = new Date();
-      console.log('today:' + JSON.stringify(today));
       const startDate = new Date(today);
 
       startDate.setDate(today.getDate() - numDays);
-      console.log('startDate:' + JSON.stringify(startDate));
-      console.log('allDates:' + JSON.stringify(allDates));
 
       filteredIndexes = allDates
         .map((date, index) => ({ date, index }))
@@ -176,12 +189,10 @@ export class ProgressPage implements OnInit {
     } else {
       filteredIndexes = allDates.map((_, index: number) => index);
     }
-    console.log('filteredIndexes:' + JSON.stringify(filteredIndexes));
 
     const filteredDates = filteredIndexes.map((index) => this.data.dates[index]);
     const filteredData = filteredIndexes.map((index) => selectedDataset.data[index]);
-    console.log('filteredDates:' + JSON.stringify(filteredDates));
-    console.log('filteredData:' + JSON.stringify(filteredData));
+
     this.chartData = {
       labels: filteredDates,
       datasets: [{ label: this.selectedTab, data: filteredData }],
@@ -223,12 +234,10 @@ export class ProgressPage implements OnInit {
         ticks: {
           callback: (value: any, index: number, values: any[]) => {
             const labelStr = filteredDates[index];
-            console.log('labelStr:' + JSON.stringify(labelStr));
             if (!labelStr) {
               return '';
             }
             const labelDate = new Date(labelStr);
-            console.log('labelDate:' + JSON.stringify(labelDate));
 
             const dateStr = labelDate.toLocaleDateString();
             const year = labelDate.getFullYear();

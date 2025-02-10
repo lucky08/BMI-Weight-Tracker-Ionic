@@ -131,6 +131,7 @@ export class UserProfilePage implements OnInit {
           if (createdUserProfile) {
             this.toastService.info('Your profile has been created successfully', 3000, 'bottom');
             this.eventService.triggerReloadHistories();
+            this.eventService.triggerReloadProgresses();
             this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
           }
         });
@@ -139,6 +140,7 @@ export class UserProfilePage implements OnInit {
           if (updatedUserProfile) {
             this.toastService.info('Your profile has been updated successfully', 3000, 'bottom');
             this.eventService.triggerReloadHistories();
+            this.eventService.triggerReloadProgresses();
             this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
           }
         });
