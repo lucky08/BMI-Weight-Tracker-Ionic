@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content *ngIf="histories && histories.length > 0 else noProgressChart">
   <ion-header>
     <ion-toolbar>
       <ion-segment (ionChange)="updateSegment($event)">
@@ -37,3 +37,6 @@
     </ion-tab>
   </ion-tabs>
 </ion-content>
+<ng-template #noProgressChart>
+  <span class="warning-text">You haven't logged any progress yet. Start by adding your weight.</span>
+</ng-template>
