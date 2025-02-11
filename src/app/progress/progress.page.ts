@@ -119,15 +119,12 @@ export class ProgressPage implements OnInit, OnDestroy {
 
             histories.map((history) => {
               if (updatedSetting && updatedSetting.unit === 'usa') {
-                console.log(updatedSetting.unit);
                 const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
                   Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
                 );
 
                 history.weight = poundsToKilogram.filter((item) => item.value === closestHistoryWeight)[0].text;
-                console.log('history weight: ' + history.weight);
               } else if (updatedSetting && updatedSetting.unit === 'china') {
-                console.log(updatedSetting.unit);
                 const roundWeight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
                 history.weight = roundWeight;
               }

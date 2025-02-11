@@ -117,7 +117,8 @@ export class HistoryPage implements OnInit, OnDestroy {
         this.weightDateService.update(weightDate).subscribe((createdWeightDate) => {
           if (createdWeightDate) {
             this.toastService.info('Your weight has been updated successfully', 2000, 'bottom');
-            this.reloadPage();
+            this.eventService.triggerReloadHistories();
+            this.eventService.triggerReloadProgresses();
           }
         });
       }
@@ -142,6 +143,7 @@ export class HistoryPage implements OnInit, OnDestroy {
             this.weightDateService.delete(index).subscribe((res) => {
               if (res) {
                 this.histories = this.histories.filter((history) => history.id !== index);
+                this.eventService.triggerReloadProgresses();
                 this.toastService.info('Your history has been deleted successfully', 2000, 'bottom');
               }
             });
