@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 
 // rxjs
@@ -22,7 +22,7 @@ import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
   styleUrls: ['progress.page.scss'],
   standalone: false,
 })
-export class ProgressPage implements OnInit {
+export class ProgressPage implements OnInit, OnDestroy {
   histories: WeightDate[] = [];
   unit: string = 'china';
   uuid: any;
@@ -301,5 +301,9 @@ export class ProgressPage implements OnInit {
         ...xAxisOptions,
       },
     };
+  }
+
+  ngOnDestroy() {
+    this.progressSubscription.unsubscribe();
   }
 }
