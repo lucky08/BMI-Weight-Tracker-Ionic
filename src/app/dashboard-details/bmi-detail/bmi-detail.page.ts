@@ -21,7 +21,5 @@ export class BmiDetailPage implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
-    console.log('start!!');
-  }
+  ngOnInit() {}
 }

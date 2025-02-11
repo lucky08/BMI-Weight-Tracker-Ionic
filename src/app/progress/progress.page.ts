@@ -105,7 +105,6 @@ export class ProgressPage implements OnInit, OnDestroy {
       .getReloadProgresses()
       .pipe(startWith(null))
       .subscribe(() => {
-        console.log('111');
         this.reloadPage();
       });
   }
