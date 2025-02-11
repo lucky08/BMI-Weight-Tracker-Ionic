@@ -56,3 +56,8 @@
 .dark-theme th {
   background-color: blueviolet !important;
 }
+
+.dark-theme .alert-radio-label,
+.dark-theme .alert-checkbox-label {
+  color: #ffffff !important; /* action sheet or alert mode */
+}
