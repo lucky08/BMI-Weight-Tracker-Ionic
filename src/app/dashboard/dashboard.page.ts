@@ -56,6 +56,7 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.uuid = await this.deviceService.getDeviceId();
+    this.kilogramsUSAValues = poundsToKilogram.map((item) => item.value);
 
     this.checkIsNewUserProfile();
 
