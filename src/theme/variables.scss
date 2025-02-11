@@ -1,14 +1,5 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
-/*:root {
-  --ion-color-primary: #3880ff;
-  --ion-color-primary-rgb: 56, 128, 255;
-  --ion-color-secondary: #3dc2ff;
-  --ion-color-secondary-rgb: 61, 194, 255;
-  --ion-background-color: #ffffff;
-  --ion-text-color: #000000;
-}*/
-
 .dark-theme {
   --ion-color-primary: #717884;
   --ion-color-secondary: rgb(219, 215, 215);
@@ -21,7 +12,13 @@
 }
 
 .dark-theme ion-datetime {
-  --background: #393838 !important;
+  --background: black;
+}
+
+.dark-theme ion-datetime::part(time-button) {
+  background: grey !important;
+  color: white !important;
+  border-radius: 8px;
 }
 
 .dark-theme ion-label {
