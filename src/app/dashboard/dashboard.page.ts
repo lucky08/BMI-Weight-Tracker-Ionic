@@ -64,7 +64,7 @@ export class DashboardPage implements OnInit, OnDestroy {
       .getReloadHistories()
       .pipe(startWith(null))
       .subscribe(() => {
-        this.reloadPage();
+        this.reloadDashboardPage();
       });
   }
 
@@ -83,7 +83,7 @@ export class DashboardPage implements OnInit, OnDestroy {
     });
   }
 
-  reloadPage() {
+  reloadDashboardPage() {
     this.userProfileService
       .getByUuid(this.uuid)
       .pipe(

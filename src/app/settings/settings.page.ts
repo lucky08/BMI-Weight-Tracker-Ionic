@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+// rxjs
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -44,10 +46,11 @@ export class SettingsPage implements OnInit, OnDestroy {
         this.handleUserProfileUpdate(true);
       }
     });
+
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
       this.settings = {
-        unit: updatedSetting && updatedSetting.unit ? updatedSetting.unit : 'china',
-        darkMode: updatedSetting && updatedSetting.darkMode ? updatedSetting.darkMode : false,
+        unit: updatedSetting?.unit || 'china',
+        darkMode: updatedSetting?.darkMode || false,
       };
 
       if (this.settings.darkMode) {

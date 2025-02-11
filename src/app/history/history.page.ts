@@ -51,11 +51,11 @@ export class HistoryPage implements OnInit, OnDestroy {
       .getReloadHistories()
       .pipe(startWith(null))
       .subscribe(() => {
-        this.reloadPage();
+        this.reloadHistoryPage();
       });
   }
 
-  reloadPage() {
+  reloadHistoryPage() {
     this.userProfileService
       .getByUuid(this.uuid)
       .pipe(
@@ -130,10 +130,10 @@ export class HistoryPage implements OnInit, OnDestroy {
     modal.onDidDismiss().then((detail) => {
       if (detail !== null && detail.data.result !== 'closed') {
         const weightDate = {
-          id: originalWeightDateTime && originalWeightDateTime.id,
+          id: originalWeightDateTime?.id,
           weight: detail.data.result.weight,
           dateTime: detail.data.result.dateTime,
-          userProfileId: originalWeightDateTime && originalWeightDateTime.userProfileId,
+          userProfileId: originalWeightDateTime?.userProfileId,
         };
 
         this.weightDateService.update(weightDate).subscribe((createdWeightDate) => {

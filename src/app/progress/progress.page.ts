@@ -105,11 +105,11 @@ export class ProgressPage implements OnInit, OnDestroy {
       .getReloadProgresses()
       .pipe(startWith(null))
       .subscribe(() => {
-        this.reloadPage();
+        this.reloadProgressPage();
       });
   }
 
-  reloadPage() {
+  reloadProgressPage() {
     this.userProfileService
       .getByUuid(this.uuid)
       .pipe(
