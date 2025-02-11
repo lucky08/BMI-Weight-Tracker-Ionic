@@ -3,7 +3,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal.page';
 
 // rxjs
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap, map, forkJoin } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 // services
@@ -56,40 +56,62 @@ export class HistoryPage implements OnInit, OnDestroy {
   }
 
   reloadPage() {
-    this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
-      if (userProfile && typeof userProfile.id === 'number') {
-        this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
-          histories.sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()); //sort by dateTime
+    this.userProfileService
+      .getByUuid(this.uuid)
+      .pipe(
+        switchMap((userProfile) => {
+          if (!userProfile || typeof userProfile.id !== 'number') {
+            throw new Error('Invalid user profile');
+          }
 
-          this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-            this.unit = updatedSetting.unit;
-            this.allKilogramsHistories = histories.map((item) => ({ ...item })); //deep copy array
-
-            this.allKilogramsHistories.forEach((history) => this.convertWeight(history, updatedSetting));
-            histories.forEach((history) => this.convertWeight(history, updatedSetting, true));
-
-            this.histories = histories;
+          return forkJoin({
+            histories: this.weightDateService.getAllByUserProfileId(userProfile.id),
+            updatedSetting: this.settingService.getByUuid(this.uuid),
           });
-        });
-      }
-    });
+        }),
+        map(({ histories, updatedSetting }) => {
+          this.unit = updatedSetting.unit;
+
+          // sort by time
+          const sortedHistories = histories.sort(
+            (a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime(),
+          );
+
+          // deep copy
+          this.allKilogramsHistories = sortedHistories.map((item) => ({ ...item }));
+
+          // convert weight
+          const convertedHistories = sortedHistories.map((history) =>
+            this.convertWeight({ ...history }, updatedSetting, true),
+          );
+
+          return convertedHistories;
+        }),
+      )
+      .subscribe((histories) => {
+        this.histories = histories;
+      });
   }
 
-  convertWeight(history: any, updatedSetting: any, isTextFormat: boolean = false) {
-    if (!updatedSetting) return;
+  convertWeight(history: any, updatedSetting: any, isTextFormat: boolean = false): any {
+    if (!updatedSetting) return history;
+
+    const newHistory = { ...history };
 
     if (updatedSetting.unit === 'usa') {
       const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-        Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
+        Math.abs(curr - newHistory.weight) < Math.abs(prev - newHistory.weight) ? curr : prev,
       );
 
       const matchedWeight = poundsToKilogram.find((item) => item.value === closestHistoryWeight);
       if (matchedWeight) {
-        history.weight = isTextFormat ? matchedWeight.text : matchedWeight.value;
+        newHistory.weight = isTextFormat ? matchedWeight.text : matchedWeight.value;
       }
     } else if (updatedSetting.unit === 'china') {
-      history.weight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
+      newHistory.weight = Number.isInteger(newHistory.weight) ? newHistory.weight : Math.round(newHistory.weight);
     }
+
+    return newHistory;
   }
 
   async editHistory(index: number) {

@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { WeightDateModalPage } from 'src/app/weight-date-modal/weight-date-modal.page';
 
 // rxjs
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap, map, forkJoin } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 // services
@@ -84,33 +84,42 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   reloadPage() {
-    this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
-      if (userProfile && typeof userProfile.id === 'number') {
-        this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
-          this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-            this.unit = updatedSetting.unit;
+    this.userProfileService
+      .getByUuid(this.uuid)
+      .pipe(
+        switchMap((userProfile) => {
+          if (!userProfile || typeof userProfile.id !== 'number') {
+            throw new Error('Invalid user profile');
+          }
 
-            histories.map((history) => {
-              if (updatedSetting && updatedSetting.unit === 'usa') {
-                const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-                  Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
-                );
-
-                history.weight = poundsToKilogram.filter((item) => item.value === closestHistoryWeight)[0].text;
-              } else if (updatedSetting && updatedSetting.unit === 'china') {
-                const roundWeight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
-                history.weight = roundWeight;
-              }
-            });
+          return forkJoin({
+            histories: this.weightDateService.getAllByUserProfileId(userProfile.id),
+            updatedSetting: this.settingService.getByUuid(this.uuid),
           });
+        }),
+        map(({ histories, updatedSetting }) => {
+          this.unit = updatedSetting.unit;
 
-          this.histories = histories;
-          this.latestHistory = histories.reduce((prev, current) =>
-            new Date(current.dateTime) > new Date(prev.dateTime) ? current : prev,
-          );
-        });
-      }
-    });
+          return histories.map((history) => {
+            if (updatedSetting.unit === 'usa') {
+              const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
+                Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
+              );
+              history.weight =
+                poundsToKilogram.find((item) => item.value === closestHistoryWeight)?.text || history.weight;
+            } else if (updatedSetting.unit === 'china') {
+              history.weight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
+            }
+            return history;
+          });
+        }),
+      )
+      .subscribe((histories) => {
+        this.histories = histories;
+        this.latestHistory = histories.reduce((prev, current) =>
+          new Date(current.dateTime) > new Date(prev.dateTime) ? current : prev,
+        );
+      });
   }
 
   navigateToBMIDetail() {

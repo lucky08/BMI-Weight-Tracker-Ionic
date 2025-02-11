@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
+// rjxs
+import { forkJoin } from 'rxjs';
+
 // services
 import { UserProfileService } from 'src/app/core/services/user-profile.service';
 import { DeviceService } from 'src/app/core/services/device.service';
@@ -52,44 +55,42 @@ export class UserProfilePage implements OnInit {
   async ngOnInit() {
     this.ageOptions = this.generateAgeOptions();
     this.uuid = await this.deviceService.getDeviceId();
-    this.centimetersUSAValues = feetToCentimeters.map((item) => item.value);
 
-    this.route.paramMap.subscribe((params) => {
-      if (params.get('uuid')) {
-        this.isEdit = true;
+    this.centimetersUSAValues = feetToCentimeters.map((item) => item.value);
+    this.isEdit = this.route.snapshot.paramMap.has('uuid');
+
+    forkJoin({
+      updatedSetting: this.settingService.getByUuid(this.uuid),
+      userProfile: this.userProfileService.getByUuid(this.uuid),
+    }).subscribe(({ updatedSetting, userProfile }) => {
+      this.heightOptions = this.generateCMHeightOptions(updatedSetting?.unit ?? 'china');
+      this.selectedHeight = updatedSetting?.unit === 'usa' ? 162.56 : 165;
+
+      if (userProfile) {
+        this.profileForm.patchValue({
+          age: userProfile.age,
+          height: this.convertHeight(userProfile.height, updatedSetting?.unit),
+          userName: userProfile.userName,
+          gender: userProfile.gender,
+        });
+
+        this.selectedHeight = this.convertHeight(userProfile.height, updatedSetting?.unit);
       }
     });
+  }
 
-    this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-      this.heightOptions = this.generateCMHeightOptions(
-        updatedSetting && updatedSetting.unit ? updatedSetting.unit : 'china',
+  convertHeight(height: number, unit: string | undefined): number {
+    if (!unit || unit === 'china') {
+      return Number.isInteger(height) ? height : Math.round(height);
+    }
+
+    if (unit === 'usa') {
+      return this.centimetersUSAValues.reduce((prev: number, curr: number) =>
+        Math.abs(curr - height) < Math.abs(prev - height) ? curr : prev,
       );
+    }
 
-      this.selectedHeight = updatedSetting && updatedSetting.unit === 'usa' ? 162.56 : 165;
-
-      this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
-        if (userProfile) {
-          this.profileForm.patchValue({ age: userProfile.age });
-
-          if (updatedSetting.unit === 'china') {
-            const roundHeight = Number.isInteger(userProfile.height)
-              ? userProfile.height
-              : Math.round(userProfile.height);
-            this.selectedHeight = roundHeight;
-            this.profileForm.patchValue({ height: roundHeight });
-          } else if (updatedSetting.unit === 'usa') {
-            const closestUserProfileHeight = this.centimetersUSAValues.reduce((prev: any, curr: any) =>
-              Math.abs(curr - userProfile.height) < Math.abs(prev - userProfile.height) ? curr : prev,
-            );
-            this.selectedHeight = closestUserProfileHeight;
-            this.profileForm.patchValue({ height: closestUserProfileHeight });
-          }
-
-          this.profileForm.patchValue({ userName: userProfile.userName });
-          this.profileForm.patchValue({ gender: userProfile.gender });
-        }
-      });
-    });
+    return height;
   }
 
   generateAgeOptions() {

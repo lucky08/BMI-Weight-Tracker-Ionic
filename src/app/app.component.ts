@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+// rxjs
+import { forkJoin } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+
 // service
 import { DeviceService } from 'src/app/core/services/device.service';
 import { SettingService } from 'src/app/core/services/setting.service';
@@ -20,41 +24,48 @@ export class AppComponent implements OnInit {
     const identifier = await this.deviceService.getDeviceId();
     const info = await this.deviceService.getDeviceInfo();
 
-    this.settingService.getByUuid(identifier).subscribe((updatedSetting) => {
-      if (updatedSetting && updatedSetting.darkMode) {
-        document.body.classList.toggle('dark-theme', updatedSetting.darkMode);
-      }
-    });
+    forkJoin([this.settingService.getByUuid(identifier), this.deviceService.getByUuid(identifier)])
+      .pipe(
+        switchMap(([updatedSetting, device]) => {
+          // Handle dark mode toggle based on settings
+          if (updatedSetting && updatedSetting.darkMode) {
+            document.body.classList.toggle('dark-theme', updatedSetting.darkMode);
+          }
 
-    this.deviceService.getByUuid(identifier).subscribe((device) => {
-      console.log(!device);
-      if (!device) {
-        const device = {
-          uuid: identifier,
-          isVirtual: info.isVirtual,
-          manufacturer: info.manufacturer,
-          model: info.model,
-          operatingSystem: info.operatingSystem,
-          osVersion: info.osVersion,
-          platform: info.platform,
-          webViewVersion: info.webViewVersion,
-        };
-
-        this.deviceService.save(device).subscribe((createdDevice) => {
-          if (createdDevice) {
-            // Add default setting
-            const setting = {
-              unit: 'china',
-              darkMode: false,
+          // If no device exists, we save the new device data and settings
+          if (!device) {
+            const newDevice = {
               uuid: identifier,
+              isVirtual: info.isVirtual,
+              manufacturer: info.manufacturer,
+              model: info.model,
+              operatingSystem: info.operatingSystem,
+              osVersion: info.osVersion,
+              platform: info.platform,
+              webViewVersion: info.webViewVersion,
             };
 
-            this.settingService.save(setting).subscribe((res) => {
-              console.log('Setting has been saved successfully');
-            });
+            return this.deviceService.save(newDevice).pipe(
+              switchMap((createdDevice) => {
+                if (createdDevice) {
+                  const defaultSetting = {
+                    unit: 'china',
+                    darkMode: false,
+                    uuid: identifier,
+                  };
+
+                  return this.settingService
+                    .save(defaultSetting)
+                    .pipe(tap(() => console.log('Setting has been saved successfully')));
+                }
+                return [];
+              }),
+            );
           }
-        });
-      }
-    });
+
+          return [];
+        }),
+      )
+      .subscribe();
   }
 }

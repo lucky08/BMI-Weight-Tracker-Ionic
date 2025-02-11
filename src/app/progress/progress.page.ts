@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 
 // rxjs
-import { Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { Subscription, forkJoin } from 'rxjs';
+import { startWith, switchMap, map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 // services
@@ -110,32 +110,50 @@ export class ProgressPage implements OnInit, OnDestroy {
   }
 
   reloadPage() {
-    this.userProfileService.getByUuid(this.uuid).subscribe((userProfile) => {
-      if (userProfile && typeof userProfile.id === 'number') {
-        this.weightDateService.getAllByUserProfileId(userProfile.id).subscribe((histories) => {
-          this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
-            this.unit = updatedSetting.unit;
-
-            histories.map((history) => {
-              if (updatedSetting && updatedSetting.unit === 'usa') {
-                const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-                  Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
-                );
-
-                history.weight = poundsToKilogram.filter((item) => item.value === closestHistoryWeight)[0].text;
-              } else if (updatedSetting && updatedSetting.unit === 'china') {
-                const roundWeight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
-                history.weight = roundWeight;
-              }
+    this.userProfileService
+      .getByUuid(this.uuid)
+      .pipe(
+        switchMap((userProfile) => {
+          if (userProfile && typeof userProfile.id === 'number') {
+            return forkJoin({
+              histories: this.weightDateService.getAllByUserProfileId(userProfile.id),
+              updatedSetting: this.settingService.getByUuid(this.uuid),
             });
+          }
+          throw new Error('Invalid user profile');
+        }),
+        map(({ histories, updatedSetting }) => {
+          this.unit = updatedSetting.unit;
 
-            this.histories = histories;
-            this.data = this.transformHistoryData(this.histories);
-            this.updateChartData(this.selectedTab);
-          });
-        });
+          const transformedHistories = histories.map((history) => this.convertWeight(history, updatedSetting));
+
+          this.histories = transformedHistories;
+          this.data = this.transformHistoryData(this.histories);
+          this.updateChartData(this.selectedTab);
+        }),
+      )
+      .subscribe();
+  }
+
+  convertWeight(history: any, updatedSetting: any): any {
+    if (!updatedSetting) return history;
+
+    const newHistory = { ...history };
+
+    if (updatedSetting.unit === 'usa') {
+      const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
+        Math.abs(curr - newHistory.weight) < Math.abs(prev - newHistory.weight) ? curr : prev,
+      );
+
+      const matchedWeight = poundsToKilogram.find((item) => item.value === closestHistoryWeight);
+      if (matchedWeight) {
+        newHistory.weight = matchedWeight.text;
       }
-    });
+    } else if (updatedSetting.unit === 'china') {
+      newHistory.weight = Number.isInteger(newHistory.weight) ? newHistory.weight : Math.round(newHistory.weight);
+    }
+
+    return newHistory;
   }
 
   setSelectedTab(selectedTab: string) {
