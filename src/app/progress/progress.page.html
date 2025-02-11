@@ -28,7 +28,11 @@
 
     <ion-tab class="chart-container">
       <ion-content>
-        <app-progress-chart [chartData]="chartData" [lineChartOptions]="lineChartOptions"></app-progress-chart>
+        <app-progress-chart
+          *ngIf="(lineChartOptions$ | async) as lineChartOptions"
+          [chartData]="chartData"
+          [lineChartOptions]="lineChartOptions"
+        ></app-progress-chart>
       </ion-content>
     </ion-tab>
   </ion-tabs>

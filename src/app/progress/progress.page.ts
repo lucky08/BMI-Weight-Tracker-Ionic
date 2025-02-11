@@ -4,6 +4,7 @@ import { ChartData, ChartOptions } from 'chart.js';
 // rxjs
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 // services
 import { DeviceService } from 'src/app/core/services/device.service';
@@ -80,6 +81,14 @@ export class ProgressPage implements OnInit, OnDestroy {
       },
     },
   };
+
+  lineChartOptions$: BehaviorSubject<ChartOptions<'line'>> = new BehaviorSubject<ChartOptions<'line'>>({
+    responsive: true,
+    scales: {
+      x: {},
+      y: {},
+    },
+  });
 
   constructor(
     private userProfileService: UserProfileService,
@@ -293,6 +302,16 @@ export class ProgressPage implements OnInit, OnDestroy {
         },
       },
     };
+
+    setTimeout(() => {
+      this.lineChartOptions$.next({
+        ...this.lineChartOptions,
+        scales: {
+          ...this.lineChartOptions?.scales,
+          ...xAxisOptions,
+        },
+      });
+    }, 100); // Delay by 100ms (0.1 seconds)
 
     return {
       ...this.lineChartOptions,
