@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+// utils
+import { enableDarkMode } from 'src/app/shared/utils/common-utils';
+
 // rxjs
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -54,7 +57,7 @@ export class SettingsPage implements OnInit, OnDestroy {
       };
 
       if (this.settings.darkMode) {
-        document.body.classList.toggle('dark-theme', this.settings.darkMode);
+        enableDarkMode(this.settings.darkMode);
       }
     });
   }

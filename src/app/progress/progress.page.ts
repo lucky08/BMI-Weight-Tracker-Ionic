@@ -17,6 +17,9 @@ import { EventService } from 'src/app/core/services/event.service';
 import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
+// utils
+import { convertWeight } from 'src/app/shared/utils/common-utils';
+
 @Component({
   selector: 'app-progress',
   templateUrl: 'progress.page.html',
@@ -125,7 +128,9 @@ export class ProgressPage implements OnInit, OnDestroy {
         map(({ histories, updatedSetting }) => {
           this.unit = updatedSetting.unit;
 
-          const transformedHistories = histories.map((history) => this.convertWeight(history, updatedSetting));
+          const transformedHistories = histories.map((history) =>
+            convertWeight(history, updatedSetting, this.kilogramsUSAValues, true),
+          );
 
           this.histories = transformedHistories;
           this.data = this.transformHistoryData(this.histories);
@@ -133,27 +138,6 @@ export class ProgressPage implements OnInit, OnDestroy {
         }),
       )
       .subscribe();
-  }
-
-  convertWeight(history: any, updatedSetting: any): any {
-    if (!updatedSetting) return history;
-
-    const newHistory = { ...history };
-
-    if (updatedSetting.unit === 'usa') {
-      const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-        Math.abs(curr - newHistory.weight) < Math.abs(prev - newHistory.weight) ? curr : prev,
-      );
-
-      const matchedWeight = poundsToKilogram.find((item) => item.value === closestHistoryWeight);
-      if (matchedWeight) {
-        newHistory.weight = matchedWeight.text;
-      }
-    } else if (updatedSetting.unit === 'china') {
-      newHistory.weight = Number.isInteger(newHistory.weight) ? newHistory.weight : Math.round(newHistory.weight);
-    }
-
-    return newHistory;
   }
 
   setSelectedTab(selectedTab: string) {

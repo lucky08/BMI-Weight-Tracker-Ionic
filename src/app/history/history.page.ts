@@ -18,6 +18,9 @@ import { EventService } from 'src/app/core/services/event.service';
 import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
+// utils
+import { convertWeight } from 'src/app/shared/utils/common-utils';
+
 @Component({
   selector: 'app-history',
   templateUrl: 'history.page.html',
@@ -82,7 +85,7 @@ export class HistoryPage implements OnInit, OnDestroy {
 
           // convert weight
           const convertedHistories = sortedHistories.map((history) =>
-            this.convertWeight({ ...history }, updatedSetting, true),
+            convertWeight({ ...history }, updatedSetting, this.kilogramsUSAValues, true),
           );
 
           return convertedHistories;
@@ -91,27 +94,6 @@ export class HistoryPage implements OnInit, OnDestroy {
       .subscribe((histories) => {
         this.histories = histories;
       });
-  }
-
-  convertWeight(history: any, updatedSetting: any, isTextFormat: boolean = false): any {
-    if (!updatedSetting) return history;
-
-    const newHistory = { ...history };
-
-    if (updatedSetting.unit === 'usa') {
-      const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-        Math.abs(curr - newHistory.weight) < Math.abs(prev - newHistory.weight) ? curr : prev,
-      );
-
-      const matchedWeight = poundsToKilogram.find((item) => item.value === closestHistoryWeight);
-      if (matchedWeight) {
-        newHistory.weight = isTextFormat ? matchedWeight.text : matchedWeight.value;
-      }
-    } else if (updatedSetting.unit === 'china') {
-      newHistory.weight = Number.isInteger(newHistory.weight) ? newHistory.weight : Math.round(newHistory.weight);
-    }
-
-    return newHistory;
   }
 
   async editHistory(index: number) {

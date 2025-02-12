@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+// utils
+import { enableDarkMode } from 'src/app/shared/utils/common-utils';
+
 // rxjs
 import { forkJoin } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -29,7 +32,7 @@ export class AppComponent implements OnInit {
         switchMap(([updatedSetting, device]) => {
           // Handle dark mode toggle based on settings
           if (updatedSetting && updatedSetting.darkMode) {
-            document.body.classList.toggle('dark-theme', updatedSetting.darkMode);
+            enableDarkMode(updatedSetting.darkMode);
           }
 
           // If no device exists, we save the new device data and settings
