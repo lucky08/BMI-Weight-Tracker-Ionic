@@ -37,7 +37,14 @@ export class ProgressChartComponent implements OnChanges {
             }
             return item;
           }),
-          label: dataset.label,
+          label:
+            dataset.label === 'weight'
+              ? 'Weight'
+              : dataset.label === 'bmi'
+                ? 'BMI'
+                : dataset.label === 'bodyFat'
+                  ? 'Body Fat Percentage'
+                  : dataset.label,
           borderColor: dataset.borderColor || 'rgba(75, 192, 192, 1)', // Default styles
           backgroundColor: dataset.backgroundColor || 'rgba(75, 192, 192, 0.2)',
           fill: dataset.fill ?? false,
