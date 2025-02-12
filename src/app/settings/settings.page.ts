@@ -93,11 +93,15 @@ export class SettingsPage implements OnInit, OnDestroy {
 
     this.settingService.update(updatedSetting).subscribe((updatedSetting) => {
       if (updatedSetting) {
-        this.toastService.info('Your setting has been updated successfully', 2000, 'bottom');
-        this.eventService.triggerReloadHistories();
-        this.eventService.triggerReloadProgresses();
+        this.handleSettingUpdated();
       }
     });
+  }
+
+  private handleSettingUpdated() {
+    this.toastService.info('Your setting has been updated successfully', 2000, 'bottom');
+    this.eventService.triggerReloadHistories();
+    this.eventService.triggerReloadProgresses();
   }
 
   ngOnDestroy() {

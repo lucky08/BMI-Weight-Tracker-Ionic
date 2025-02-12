@@ -119,23 +119,24 @@ export class UserProfilePage implements OnInit {
       if (!this.isEdit) {
         this.userProfileService.save(userProfile).subscribe((createdUserProfile) => {
           if (createdUserProfile) {
-            this.toastService.info('Your profile has been created successfully', 3000, 'bottom');
-            this.eventService.triggerReloadHistories();
-            this.eventService.triggerReloadProgresses();
-            this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
+            this.handleOnSubmit('Your profile has been created successfully');
           }
         });
       } else {
         this.userProfileService.update(userProfile).subscribe((updatedUserProfile) => {
           if (updatedUserProfile) {
-            this.toastService.info('Your profile has been updated successfully', 3000, 'bottom');
-            this.eventService.triggerReloadHistories();
-            this.eventService.triggerReloadProgresses();
-            this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
+            this.handleOnSubmit('Your profile has been updated successfully');
           }
         });
       }
     }
+  }
+
+  private handleOnSubmit(message: string) {
+    this.toastService.info(message, 3000, 'bottom');
+    this.eventService.triggerReloadHistories();
+    this.eventService.triggerReloadProgresses();
+    this.router.navigate(['/tabs/settings'], { queryParams: { refresh: new Date().getTime() } });
   }
 
   cancelUserProfile() {

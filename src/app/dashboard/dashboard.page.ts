@@ -19,6 +19,9 @@ import { EventService } from 'src/app/core/services/event.service';
 import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
+// utils
+import { convertWeight } from 'src/app/shared/utils/common-utils';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: 'dashboard.page.html',
@@ -101,16 +104,7 @@ export class DashboardPage implements OnInit, OnDestroy {
           this.unit = updatedSetting.unit;
 
           return histories.map((history) => {
-            if (updatedSetting.unit === 'usa') {
-              const closestHistoryWeight = this.kilogramsUSAValues.reduce((prev: any, curr: any) =>
-                Math.abs(curr - history.weight) < Math.abs(prev - history.weight) ? curr : prev,
-              );
-              history.weight =
-                poundsToKilogram.find((item) => item.value === closestHistoryWeight)?.text || history.weight;
-            } else if (updatedSetting.unit === 'china') {
-              history.weight = Number.isInteger(history.weight) ? history.weight : Math.round(history.weight);
-            }
-            return history;
+            return convertWeight(history, updatedSetting, this.kilogramsUSAValues, true);
           });
         }),
       )
@@ -150,15 +144,19 @@ export class DashboardPage implements OnInit, OnDestroy {
 
         this.weightDateService.save(weightDate).subscribe((createdWeightDate) => {
           if (createdWeightDate) {
-            this.toastService.info('Your weight has been added successfully', 2000, 'bottom');
-            this.eventService.triggerReloadHistories();
-            this.eventService.triggerReloadProgresses();
+            this.handleWeightAdded();
           }
         });
       }
     });
 
     await modal.present();
+  }
+
+  private handleWeightAdded() {
+    this.toastService.info('Your weight has been added successfully', 2000, 'bottom');
+    this.eventService.triggerReloadHistories();
+    this.eventService.triggerReloadProgresses();
   }
 
   ngOnDestroy() {
