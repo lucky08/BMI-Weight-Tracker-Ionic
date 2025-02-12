@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+// utils
+import {
+  convertDateTimeFromISOStringToOriginal,
+  convertDateTimeFromOriginalToISOString,
+} from 'src/app/shared/utils/common-utils';
+
 // services
 import { SettingService } from 'src/app/core/services/setting.service';
 import { DeviceService } from 'src/app/core/services/device.service';
@@ -58,7 +64,7 @@ export class WeightDateModalPage implements OnInit {
         this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
 
         const dateString = this.originalWeightDateTime.dateTime;
-        const isoString = this.convertDateTimeFromOriginalToISOString(dateString);
+        const isoString = convertDateTimeFromOriginalToISOString(dateString);
         this.weightDateForm.patchValue({ dateTime: isoString });
       }
     });
@@ -87,24 +93,9 @@ export class WeightDateModalPage implements OnInit {
   submitForm() {
     const data = {
       weight: this.weightDateForm.value.weight,
-      dateTime: this.convertDateTimeFromISOStringToOriginal(this.weightDateForm.value.dateTime),
+      dateTime: convertDateTimeFromISOStringToOriginal(this.weightDateForm.value.dateTime),
     };
 
     this.modalController.dismiss({ result: data });
-  }
-
-  convertDateTimeFromISOStringToOriginal(stringDate: any) {
-    const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
-
-    if (isoRegex.test(stringDate)) {
-      return stringDate.split('.')[0];
-    }
-
-    return stringDate;
-  }
-
-  convertDateTimeFromOriginalToISOString(originalDate: any) {
-    const dateObj = new Date(originalDate.replace(' ', 'T') + 'Z');
-    return dateObj.toISOString();
   }
 }

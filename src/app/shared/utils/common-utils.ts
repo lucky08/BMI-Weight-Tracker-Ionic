@@ -29,3 +29,32 @@ export const convertWeight = (
   }
   return newHistory;
 };
+
+export const convertHeight = (height: number, unit: string | undefined, centimetersUSAValues: any[]): number => {
+  if (!unit || unit === 'china') {
+    return Number.isInteger(height) ? height : Math.round(height);
+  }
+
+  if (unit === 'usa') {
+    return centimetersUSAValues.reduce((prev: number, curr: number) =>
+      Math.abs(curr - height) < Math.abs(prev - height) ? curr : prev,
+    );
+  }
+
+  return height;
+};
+
+export const convertDateTimeFromISOStringToOriginal = (stringDate: any) => {
+  const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
+  if (isoRegex.test(stringDate)) {
+    return stringDate.split('.')[0];
+  }
+
+  return stringDate;
+};
+
+export const convertDateTimeFromOriginalToISOString = (originalDate: any) => {
+  const dateObj = new Date(originalDate.replace(' ', 'T') + 'Z');
+  return dateObj.toISOString();
+};

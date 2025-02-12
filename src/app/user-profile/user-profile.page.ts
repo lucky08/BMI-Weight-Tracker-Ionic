@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
+// utils
+import { convertHeight } from 'src/app/shared/utils/common-utils';
+
 // rjxs
 import { forkJoin } from 'rxjs';
 
@@ -69,28 +72,14 @@ export class UserProfilePage implements OnInit {
       if (userProfile) {
         this.profileForm.patchValue({
           age: userProfile.age,
-          height: this.convertHeight(userProfile.height, updatedSetting?.unit),
+          height: convertHeight(userProfile.height, updatedSetting?.unit, this.centimetersUSAValues),
           userName: userProfile.userName,
           gender: userProfile.gender,
         });
 
-        this.selectedHeight = this.convertHeight(userProfile.height, updatedSetting?.unit);
+        this.selectedHeight = convertHeight(userProfile.height, updatedSetting?.unit, this.centimetersUSAValues);
       }
     });
-  }
-
-  convertHeight(height: number, unit: string | undefined): number {
-    if (!unit || unit === 'china') {
-      return Number.isInteger(height) ? height : Math.round(height);
-    }
-
-    if (unit === 'usa') {
-      return this.centimetersUSAValues.reduce((prev: number, curr: number) =>
-        Math.abs(curr - height) < Math.abs(prev - height) ? curr : prev,
-      );
-    }
-
-    return height;
   }
 
   generateAgeOptions() {
