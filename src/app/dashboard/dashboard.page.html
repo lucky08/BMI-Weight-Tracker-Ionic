@@ -7,10 +7,10 @@
         </ion-card-header>
 
         <ion-card-content class="card-content" *ngIf="unit === 'china'">
-          {{ latestHistory && latestHistory.weight }} kg
+          {{ latestHistory?.weight }} kg
         </ion-card-content>
         <ion-card-content class="card-content" *ngIf="unit === 'usa'">
-          {{ latestHistory && latestHistory.weight }} lb
+          {{ latestHistory?.weight }} lb
         </ion-card-content>
       </ion-card>
 
@@ -19,7 +19,7 @@
           <ion-card-title>Current BMI</ion-card-title>
         </ion-card-header>
 
-        <ion-card-content class="card-content"> {{ latestHistory && latestHistory.bmi }} </ion-card-content>
+        <ion-card-content class="card-content"> {{ latestHistory?.bmi }} </ion-card-content>
       </ion-card>
     </div>
   </div>
@@ -29,9 +29,7 @@
         <ion-card-title>Current Body Fat Percentage</ion-card-title>
       </ion-card-header>
 
-      <ion-card-content class="card-content">
-        {{ latestHistory && latestHistory.bodyFatPercentage }} %
-      </ion-card-content>
+      <ion-card-content class="card-content"> {{ latestHistory?.bodyFatPercentage }} % </ion-card-content>
     </ion-card>
 
     <ion-card color="success">
@@ -39,7 +37,7 @@
         <ion-card-title>Current Status</ion-card-title>
       </ion-card-header>
 
-      <ion-card-content class="card-content"> {{ latestHistory && latestHistory.status }} </ion-card-content>
+      <ion-card-content class="card-content"> {{ latestHistory?.status }} </ion-card-content>
     </ion-card>
   </div>
   <div class="fixed-button">
