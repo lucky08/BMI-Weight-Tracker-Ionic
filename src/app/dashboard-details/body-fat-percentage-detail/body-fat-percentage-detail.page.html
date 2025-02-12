@@ -1,3 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Body Fat Percentage Calculator</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true" class="ion-padding">
   <ion-card>
     <h5>
@@ -14,7 +25,7 @@
     >Click to more info</ion-button
   >
   <ion-card>
-    <h2>BMI Calculation Formula</h2>
+    <h2>Body Fat Percentage Calculation Formula</h2>
     <div class="text-center">
       <p>The formula developed by Deurenberg et al. (1991) is commonly used:</p>
       <p>

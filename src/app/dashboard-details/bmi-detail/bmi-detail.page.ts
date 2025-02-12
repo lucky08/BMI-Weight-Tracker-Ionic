@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bmi-detail',
@@ -19,7 +20,11 @@ export class BmiDetailPage implements OnInit {
     { category: 'Obese (Class III)', value: '≥ 40.0' },
   ];
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {}
+
+  goBack() {
+    this.router.navigate(['/tabs/dashboard']);
+  }
 }

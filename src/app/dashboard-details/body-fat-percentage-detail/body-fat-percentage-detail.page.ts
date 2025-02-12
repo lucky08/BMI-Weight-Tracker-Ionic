@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-body-fat-percentage-detail',
@@ -37,7 +38,11 @@ export class BodyFatPercentageDetailPage implements OnInit {
     { category: 'Obese', percentage: 'Above 35%' },
   ];
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {}
+
+  goBack() {
+    this.router.navigate(['/tabs/dashboard']);
+  }
 }
