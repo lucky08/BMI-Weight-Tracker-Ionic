@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Body Fat Percentage Calculator</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <h5>
+      Body fat percentage refers to the proportion of fat tissue in the body compared to total body weight. It is
+      expressed as a percentage and includes both essential fat, necessary for normal physiological functions, and
+      storage fat, which is used as an energy reserve.
+    </h5>
+  </ion-card>
+  <ion-button
+    class="button-center"
+    shape="round"
+    href="https://en.wikipedia.org/wiki/Body_fat_percentage"
+    target="_blank"
+    >Click to more info</ion-button
+  >
+  <ion-card>
+    <h2>Body Fat Percentage Calculation Formula</h2>
+    <div class="text-center">
+      <p>The formula developed by Deurenberg et al. (1991) is commonly used:</p>
+      <p>
+        <strong>For Adults:</strong>
+      </p>
+      <p style="font-size: 1.2em">Body Fat Percentage=(1.20×BMI)+(0.23×Age)−(10.8×Gender Factor)−5.4</p>
+      <p>
+        <strong>For Teenagers (Children and Adolescents aged 5–18):</strong>
+      </p>
+      <p style="font-size: 1.2em">Body Fat Percentage=(1.51×BMI)−(0.70×Age)−(3.6×Gender Factor)+1.4</p>
+      <div>
+        <strong>Gender Factor:</strong>
+        <p>Use 1 for males</p>
+        <p>Use 0 for females</p>
+      </div>
+    </div>
+  </ion-card>
+
+  <ion-card>
+    <h2>Healthy Body Fat Ranges</h2>
+    <div>
+      <p class="text-center">The ideal range varies based on age, sex, and fitness level:</p>
+      <h6>Men</h6>
+      <div class="table-container">
+        <table class="responsive-table ion-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let manBFP of menBFP">
+              <td>{{ manBFP.category }}</td>
+              <td>{{ manBFP.percentage }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h6>Women</h6>
+      <div class="table-container">
+        <table class="responsive-table ion-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let womanBFP of womenBFP">
+              <td>{{ womanBFP.category }}</td>
+              <td>{{ womanBFP.percentage }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h6>Boys (7–17 years)</h6>
+      <div class="table-container">
+        <table class="responsive-table ion-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let boyBFP of boysBFP">
+              <td>{{ boyBFP.category }}</td>
+              <td>{{ boyBFP.percentage }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h6>Girls (7–17 years)</h6>
+      <div class="table-container">
+        <table class="responsive-table ion-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let girlBFP of girlsBFP">
+              <td>{{ girlBFP.category }}</td>
+              <td>{{ girlBFP.percentage }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ion-card>
+</ion-content>

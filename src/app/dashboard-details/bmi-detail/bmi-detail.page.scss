@@ -1,0 +1,62 @@
+p {
+  margin-bottom: 1em;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+strong {
+  color: #4a90e2;
+}
+
+p[style] {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+ion-table {
+  width: 100%;
+  border-collapse: collapse;
+  max-width: 600px;
+}
+
+.ion-table th,
+.ion-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.ion-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.button-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-card {
+  padding: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .ion-table {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,12 @@
+<ion-content [fullscreen]="true">
+  <div class="chart-container">
+    <canvas
+      *ngIf="lineChartData.labels && lineChartData.datasets"
+      baseChart
+      [data]="lineChartData"
+      [options]="lineChartOptions"
+      chartType="line"
+    >
+    </canvas>
+  </div>
+</ion-content>

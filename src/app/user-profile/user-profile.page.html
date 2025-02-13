@@ -1,0 +1,61 @@
+<ion-content>
+  <ion-grid>
+    <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
+      <ion-row>
+        <ion-col>
+          <ion-item class="item-row">
+            <ion-label position="stacked">User Name</ion-label>
+            <ion-input type="text" placeholder="Please input your name" formControlName="userName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item class="item-row">
+            <ion-label position="stacked">Age</ion-label>
+            <ion-select formControlName="age" [(ngModel)]="selectedAge">
+              <ion-select-option *ngFor="let age of ageOptions" [value]="age.value"> {{ age.text }} </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item class="item-row">
+            <ion-label position="stacked">Gender</ion-label>
+            <ion-select formControlName="gender" [(ngModel)]="selectedGender">
+              <ion-select-option value="male">Male</ion-select-option>
+              <ion-select-option value="female">Female</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item class="item-row">
+            <ion-label position="stacked">Height</ion-label>
+            <ion-select formControlName="height" [(ngModel)]="selectedHeight">
+              <ion-select-option *ngFor="let height of heightOptions" [value]="height.value">
+                {{ height.text }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" type="submit" [disabled]="!profileForm.valid"
+            >{{ isEdit ? 'Edit Profile' : 'Create Profile' }}</ion-button
+          >
+          <ion-button expand="block" type="button" color="medium" fill="outline" (click)="cancelUserProfile()"
+            >Cancel</ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>BMI Calculator</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <h5>
+      Body Mass Index (BMI) is a numerical value derived from an individual's weight and height, commonly used to assess
+      whether a person has a healthy body weight relative to their height. It provides a simple, standardized way to
+      categorize weight status and can indicate whether someone is underweight, normal weight, overweight, or obese.
+    </h5>
+  </ion-card>
+  <ion-button class="button-center" shape="round" href="https://en.wikipedia.org/wiki/Body_mass_index" target="_blank"
+    >Click to more info</ion-button
+  >
+  <ion-card>
+    <h2>BMI Calculation Formula</h2>
+    <div class="text-center">
+      <p>The formula for calculating BMI is:</p>
+      <p>
+        <strong>Metric:</strong>
+      </p>
+      <p style="font-size: 1.2em">BMI = Weight (kg) / [Height (m)]²</p>
+      <p>
+        <strong>Imperial:</strong>
+      </p>
+      <p style="font-size: 1.2em">BMI = [Weight (lbs) × 703] / [Height (inches)]²</p>
+    </div>
+  </ion-card>
+
+  <ion-card>
+    <h2>BMI Categories</h2>
+    <div>
+      <p class="text-center">According to the World Health Organization (WHO), BMI is classified as follows:</p>
+      <div class="table-container">
+        <table class="responsive-table ion-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>BMI (kg/m²)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let bmi of bmis">
+              <td>{{ bmi.category }}</td>
+              <td>{{ bmi.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ion-card>
+</ion-content>

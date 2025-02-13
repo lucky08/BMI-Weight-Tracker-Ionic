@@ -1,0 +1,42 @@
+<ion-content *ngIf="histories && histories.length > 0 else noProgressChart">
+  <ion-header>
+    <ion-toolbar>
+      <ion-segment (ionChange)="updateSegment($event)">
+        <ion-segment-button
+          *ngFor="let dateOption of dateOptions"
+          [value]="dateOption.value"
+          [ngClass]="{'selected-segment': selectedSegment === dateOption.value}"
+        >
+          <ion-label>{{ dateOption.label }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-tabs>
+    <ion-tab-bar slot="top">
+      <ion-tab-button tab="weight" (click)="setSelectedTab('weight')">
+        <ion-label>Weight</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="bmi" (click)="setSelectedTab('bmi')">
+        <ion-label>BMI</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="bodyFat" (click)="setSelectedTab('bodyFat')">
+        <ion-label>Body Fat Percentage</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+
+    <ion-tab class="chart-container">
+      <ion-content>
+        <app-progress-chart
+          *ngIf="(lineChartOptions$ | async) as lineChartOptions"
+          [chartData]="chartData"
+          [lineChartOptions]="lineChartOptions"
+        ></app-progress-chart>
+      </ion-content>
+    </ion-tab>
+  </ion-tabs>
+</ion-content>
+<ng-template #noProgressChart>
+  <span class="warning-text">You haven't logged any progress yet. Start by adding your weight.</span>
+</ng-template>

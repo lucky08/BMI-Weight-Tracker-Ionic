@@ -1,13 +1,28 @@
 import { Routes } from '@angular/router';
+import { TabsPage } from './tabs/tabs.page';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+    path: '',
+    redirectTo: 'tabs/dashboard',
+    pathMatch: 'full',
   },
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
+    path: 'tabs',
+    component: TabsPage,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
+      },
+    ],
+  },
+  {
+    path: 'weight-date-modal',
+    loadComponent: () => import('./weight-date-modal/weight-date-modal.page').then((m) => m.WeightDateModalPage),
+  },
+  {
+    path: 'user-profile',
+    loadComponent: () => import('./user-profile/user-profile.page').then((m) => m.UserProfilePage),
   },
 ];

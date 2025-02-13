@@ -1,0 +1,35 @@
+<ion-content *ngIf="histories && histories.length > 0 else noHistory">
+  <table>
+    <thead>
+      <tr>
+        <th>Date Time</th>
+        <th>Weight</th>
+        <th>BMI</th>
+        <th>Body Fat Percentage</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let history of histories; let i = index">
+        <td>{{ history.dateTime | date: 'MM/dd/yyyy HH:mm' }}</td>
+        <td *ngIf="unit === 'china'">{{ history.weight }} kg</td>
+        <td *ngIf="unit === 'usa'">{{ history.weight }} lb</td>
+        <td>{{ history.bmi }}</td>
+        <td>{{ history.bodyFatPercentage }} %</td>
+        <td>{{ history.status }}</td>
+        <td>
+          <ion-button *ngIf="history.id" color="primary" (click)="editHistory(history.id)">
+            <ion-icon name="create"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="history.id" color="danger" (click)="deleteHistory(history.id)">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ion-content>
+<ng-template #noHistory>
+  <span class="warning-text">No records yet. Please enter your weight to start tracking.</span>
+</ng-template>

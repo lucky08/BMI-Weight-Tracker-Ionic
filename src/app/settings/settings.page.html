@@ -1,0 +1,26 @@
+<ion-content>
+  <ion-list>
+    <!-- Profile Section -->
+    <ion-item class="item-row">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label>User Profile</ion-label>
+      <ion-button *ngIf="!isEdit" fill="clear" slot="end" [routerLink]="['/user-profile']"> New </ion-button>
+      <ion-button *ngIf="isEdit" fill="clear" slot="end" [routerLink]="['/user-profile', uuid]"> Edit </ion-button>
+    </ion-item>
+
+    <ion-item class="item-row">
+      <ion-icon name="scale-outline" slot="start"></ion-icon>
+      <ion-label>Units</ion-label>
+      <ion-select [(ngModel)]="settings.unit" (ionChange)="updateSettings()" interface="popover" slot="end">
+        <ion-select-option value="china">Kilograms (kgs) & Centimeters (cm)</ion-select-option>
+        <ion-select-option value="usa">Pounds (lbs) & Feet (ft)</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="item-row">
+      <ion-icon name="moon-outline" slot="start"></ion-icon>
+      <ion-label>Dark Mode</ion-label>
+      <ion-toggle slot="end" color="light" [(ngModel)]="settings.darkMode" (ionChange)="updateSettings()"></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-content>

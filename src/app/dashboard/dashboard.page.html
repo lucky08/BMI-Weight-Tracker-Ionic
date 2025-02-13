@@ -1,0 +1,58 @@
+<ion-content>
+  <div class="card-container">
+    <div class="row">
+      <ion-card color="warning">
+        <ion-card-header>
+          <ion-card-title>Current Weight</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content class="card-content" *ngIf="unit === 'china'">
+          {{ latestHistory && latestHistory.weight }} kg
+        </ion-card-content>
+        <ion-card-content class="card-content" *ngIf="unit === 'usa'">
+          {{ latestHistory && latestHistory.weight }} lb
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card color="secondary" (click)="navigateToBMIDetail()">
+        <ion-card-header>
+          <ion-card-title>Current BMI</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content class="card-content"> {{ latestHistory && latestHistory.bmi }} </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  <div class="row">
+    <ion-card color="tertiary" (click)="navigateToBodyFatPercentageDetail()">
+      <ion-card-header>
+        <ion-card-title>Current Body Fat Percentage</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="card-content">
+        {{ latestHistory && latestHistory.bodyFatPercentage }} %
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card color="success">
+      <ion-card-header>
+        <ion-card-title>Current Status</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="card-content"> {{ latestHistory && latestHistory.status }} </ion-card-content>
+    </ion-card>
+  </div>
+  <div class="fixed-button">
+    <div *ngIf="isEdit;else content">
+      <ion-button (click)="onAddWeight()">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Add Weight
+      </ion-button>
+    </div>
+    <div class="create-profile-warning">
+      <ng-template #content>
+        <span class="warning-text">Please create your profile at first from the Settings tab</span>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>

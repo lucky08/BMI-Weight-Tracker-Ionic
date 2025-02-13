@@ -1,0 +1,61 @@
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* row distance */
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px; /* card distance */
+}
+
+ion-card {
+  flex: 1;
+  cursor: pointer;
+  min-height: 130px;
+}
+
+ion-card-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.card-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.fixed-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+ion-button {
+  --background: #3880ff;
+  --color: white;
+  --border-radius: 10px;
+}
+
+ion-card-title,
+ion-card-content {
+  font-size: 1.4rem;
+}
+
+.fixed-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-profile-warning {
+  margin-top: 60px;
+}
