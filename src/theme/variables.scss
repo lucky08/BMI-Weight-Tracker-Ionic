@@ -1,2 +1,61 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+
+.dark-theme {
+  --ion-color-primary: #717884;
+  --ion-color-secondary: rgb(219, 215, 215);
+  --ion-background-color: black;
+  --ion-text-color: #ffffff;
+}
+
+.dark-theme ion-icon {
+  color: var(--ion-icon-color, #ffffff) !important;
+}
+
+.dark-theme ion-datetime {
+  --background: black;
+}
+
+.dark-theme ion-datetime::part(time-button) {
+  background: grey !important;
+  color: white !important;
+  border-radius: 8px;
+}
+
+.dark-theme ion-label {
+  color: rgb(183, 181, 181);
+}
+
+.dark-theme ion-button {
+  color: rgb(183, 181, 181);
+}
+
+.dark-theme ion-toggle {
+  color: #ff4081;
+}
+
+.dark-theme canvas {
+  background-color: rgb(225, 225, 225);
+}
+
+.dark-theme .item-row {
+  border-bottom: 1px solid #4d4d4d;
+}
+
+.custom-toast {
+  --border-radius: 12px;
+  --box-shadow: 0px 4px 10px #4d4d4d;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 12px 16px;
+}
+
+.dark-theme th {
+  background-color: blueviolet !important;
+}
+
+.dark-theme .alert-radio-label,
+.dark-theme .alert-checkbox-label {
+  color: #ffffff !important; /* action sheet or alert mode */
+}
