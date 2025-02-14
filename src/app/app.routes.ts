@@ -4,7 +4,7 @@ import { TabsPage } from './tabs/tabs.page';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'user-profile',
+    redirectTo: 'tabs/dashboard',
     pathMatch: 'full',
   },
   {
