@@ -4,7 +4,7 @@ import { TabsPage } from './tabs/tabs.page';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tabs/dashboard',
+    redirectTo: 'user-profile',
     pathMatch: 'full',
   },
   {
@@ -23,6 +23,6 @@ export const routes: Routes = [
   },
   {
     path: 'user-profile',
-    loadComponent: () => import('./user-profile/user-profile.page').then((m) => m.UserProfilePage),
+    loadChildren: () => import('./user-profile/user-profile.routes').then((m) => m.routes),
   },
 ];
