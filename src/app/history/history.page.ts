@@ -46,7 +46,6 @@ export class HistoryPage implements OnInit, OnDestroy {
   unit: string = 'china';
   kilogramsUSAValues: any;
   allKilogramsHistories: WeightDate[] = [];
-  convertedHistories: WeightDate[] = [];
   private historiesSubscription!: Subscription;
 
   constructor(
