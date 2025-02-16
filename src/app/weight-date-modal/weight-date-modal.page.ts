@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // modules
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IonHeader,
   IonToolbar,
@@ -25,6 +24,7 @@ import {
 import {
   convertDateTimeFromISOStringToOriginal,
   convertDateTimeFromOriginalToISOString,
+  convertHistoryWeight,
 } from 'src/app/shared/utils/common-utils';
 
 // services
@@ -56,13 +56,12 @@ import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
     IonSelectOption,
     IonDatetime,
   ],
-  providers: [NavParams],
   standalone: true,
 })
 export class WeightDateModalPage implements OnInit {
   weightDateForm: FormGroup;
-  isEdit: boolean;
-  originalWeightDateTime: any;
+  @Input() isEdit: boolean = false;
+  @Input() originalWeightDateTime: any;
   weight: number | null = null;
   selectedDate: string | null = null;
   selectedWeight: number = 25;
@@ -74,13 +73,9 @@ export class WeightDateModalPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private modalController: ModalController,
-    private navParams: NavParams,
     private settingService: SettingService,
     private deviceService: DeviceService,
   ) {
-    this.isEdit = this.navParams.get('isEdit');
-    this.originalWeightDateTime = this.navParams.get('originalWeightDateTime');
-
     this.weightDateForm = this.fb.group({
       weight: ['', [Validators.required]],
       dateTime: ['', [Validators.required]],
@@ -97,10 +92,15 @@ export class WeightDateModalPage implements OnInit {
     this.settingService.getByUuid(this.uuid).subscribe((updatedSetting) => {
       this.weightOptions = this.generateKGWeightOptions(updatedSetting.unit);
       this.selectedWeight = updatedSetting.unit === 'usa' ? 24.04 : 25;
-
       if (this.isEdit && this.originalWeightDateTime) {
-        this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
+        this.originalWeightDateTime = convertHistoryWeight(
+          this.originalWeightDateTime,
+          updatedSetting,
+          this.kilogramsUSAValues,
+          false,
+        );
 
+        this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
         const dateString = this.originalWeightDateTime.dateTime;
         const isoString = convertDateTimeFromOriginalToISOString(dateString);
         this.weightDateForm.patchValue({ dateTime: isoString });

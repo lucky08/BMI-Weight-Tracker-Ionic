@@ -5,7 +5,7 @@ export const enableDarkMode = (darkMode: boolean) => {
   return document.body.classList.toggle('dark-theme', darkMode);
 };
 
-export const convertWeight = (
+export const convertHistoryWeight = (
   history: any,
   updatedSetting: any,
   kilogramsUSAValues: any[],

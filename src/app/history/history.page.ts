@@ -26,7 +26,7 @@ import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
 // utils
-import { convertWeight } from 'src/app/shared/utils/common-utils';
+import { convertHistoryWeight } from 'src/app/shared/utils/common-utils';
 
 addIcons({
   create,
@@ -46,6 +46,7 @@ export class HistoryPage implements OnInit, OnDestroy {
   unit: string = 'china';
   kilogramsUSAValues: any;
   allKilogramsHistories: WeightDate[] = [];
+  convertedHistories: WeightDate[] = [];
   private historiesSubscription!: Subscription;
 
   constructor(
@@ -98,7 +99,7 @@ export class HistoryPage implements OnInit, OnDestroy {
 
           // convert weight
           const convertedHistories = sortedHistories.map((history) =>
-            convertWeight({ ...history }, updatedSetting, this.kilogramsUSAValues, true),
+            convertHistoryWeight(history, updatedSetting, this.kilogramsUSAValues, true),
           );
 
           return convertedHistories;
@@ -111,7 +112,6 @@ export class HistoryPage implements OnInit, OnDestroy {
 
   async editHistory(index: number) {
     const originalWeightDateTime = this.allKilogramsHistories.filter((history) => history.id === index)[0];
-
     const modal = await this.modalController.create({
       component: WeightDateModalPage, // open Modal page
       componentProps: {

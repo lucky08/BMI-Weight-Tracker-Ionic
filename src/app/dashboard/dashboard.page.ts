@@ -35,7 +35,7 @@ import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
 // utils
-import { convertWeight } from 'src/app/shared/utils/common-utils';
+import { convertHistoryWeight } from 'src/app/shared/utils/common-utils';
 
 addIcons({
   addCircleOutline,
@@ -137,7 +137,7 @@ export class DashboardPage implements OnInit, OnDestroy {
           this.unit = updatedSetting.unit;
 
           return histories.map((history) => {
-            return convertWeight(history, updatedSetting, this.kilogramsUSAValues, true);
+            return convertHistoryWeight(history, updatedSetting, this.kilogramsUSAValues, true);
           });
         }),
       )
