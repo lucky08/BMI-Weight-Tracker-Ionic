@@ -64,6 +64,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   uuid: any;
   isEdit: boolean = false;
   userProfileId: any;
+  userName: string = '';
   unit: string = 'china';
   kilogramsUSAValues: any;
   private historiesSubscription!: Subscription;
@@ -111,6 +112,7 @@ export class DashboardPage implements OnInit, OnDestroy {
       if (userProfile) {
         this.isEdit = true;
         this.userProfileId = userProfile.id;
+        this.userName = userProfile.userName;
       } else {
         this.isEdit = false;
       }

@@ -59,3 +59,28 @@ ion-card-content {
 .create-profile-warning {
   margin-top: 60px;
 }
+
+.dashboard-username {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #4a90e2, #7b61ff);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.dashboard-username:hover {
+  box-shadow: 4px 6px 15px rgba(0, 0, 0, 0.15);
+}
