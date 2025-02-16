@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // modules
@@ -60,8 +61,8 @@ import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 })
 export class WeightDateModalPage implements OnInit {
   weightDateForm: FormGroup;
-  @Input() isEdit: boolean = false;
-  @Input() originalWeightDateTime: any;
+  isEdit: boolean = false;
+  originalWeightDateTime: any;
   weight: number | null = null;
   selectedDate: string | null = null;
   selectedWeight: number = 25;
@@ -76,6 +77,16 @@ export class WeightDateModalPage implements OnInit {
     private settingService: SettingService,
     private deviceService: DeviceService,
   ) {
+    modalController = inject(ModalController);
+
+    const modal = this.modalController.getTop();
+    modal.then((modalInstance) => {
+      if (modalInstance && modalInstance.componentProps) {
+        this.isEdit = modalInstance.componentProps['isEdit'] ?? false;
+        this.originalWeightDateTime = modalInstance.componentProps['originalWeightDateTime'];
+      }
+    });
+
     this.weightDateForm = this.fb.group({
       weight: ['', [Validators.required]],
       dateTime: ['', [Validators.required]],
