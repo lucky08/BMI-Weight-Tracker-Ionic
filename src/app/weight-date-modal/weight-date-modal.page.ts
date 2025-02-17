@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   convertDateTimeFromISOStringToOriginal,
   convertDateTimeFromOriginalToISOString,
+  convertHistoryWeight,
 } from 'src/app/shared/utils/common-utils';
 
 // services
@@ -61,6 +62,13 @@ export class WeightDateModalPage implements OnInit {
       this.selectedWeight = updatedSetting.unit === 'usa' ? 24.04 : 25;
 
       if (this.isEdit && this.originalWeightDateTime) {
+        this.originalWeightDateTime = convertHistoryWeight(
+          this.originalWeightDateTime,
+          updatedSetting,
+          this.kilogramsUSAValues,
+          false,
+        );
+
         this.weightDateForm.patchValue({ weight: this.originalWeightDateTime.weight });
 
         const dateString = this.originalWeightDateTime.dateTime;

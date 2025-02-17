@@ -19,7 +19,7 @@ import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
 // utils
-import { convertWeight } from 'src/app/shared/utils/common-utils';
+import { convertHistoryWeight } from 'src/app/shared/utils/common-utils';
 
 @Component({
   selector: 'app-history',
@@ -85,7 +85,7 @@ export class HistoryPage implements OnInit, OnDestroy {
 
           // convert weight
           const convertedHistories = sortedHistories.map((history) =>
-            convertWeight({ ...history }, updatedSetting, this.kilogramsUSAValues, true),
+            convertHistoryWeight({ ...history }, updatedSetting, this.kilogramsUSAValues, true),
           );
 
           return convertedHistories;

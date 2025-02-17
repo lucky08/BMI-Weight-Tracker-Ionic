@@ -18,7 +18,7 @@ import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
 // utils
-import { convertWeight } from 'src/app/shared/utils/common-utils';
+import { convertHistoryWeight } from 'src/app/shared/utils/common-utils';
 
 @Component({
   selector: 'app-progress',
@@ -129,7 +129,7 @@ export class ProgressPage implements OnInit, OnDestroy {
           this.unit = updatedSetting.unit;
 
           const transformedHistories = histories.map((history) =>
-            convertWeight(history, updatedSetting, this.kilogramsUSAValues, true),
+            convertHistoryWeight(history, updatedSetting, this.kilogramsUSAValues, true),
           );
 
           this.histories = transformedHistories;

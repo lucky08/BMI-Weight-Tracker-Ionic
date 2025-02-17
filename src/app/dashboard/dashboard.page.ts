@@ -20,7 +20,7 @@ import { WeightDate } from 'src/app/core/models/weight-date.model';
 import { poundsToKilogram } from 'src/app/shared/constants/pounds-to-kilogram';
 
 // utils
-import { convertWeight } from 'src/app/shared/utils/common-utils';
+import { convertHistoryWeight } from 'src/app/shared/utils/common-utils';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,6 +33,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   uuid: any;
   isEdit: boolean = false;
   userProfileId: any;
+  userName: string = '';
   unit: string = 'china';
   kilogramsUSAValues: any;
   private historiesSubscription!: Subscription;
@@ -80,6 +81,7 @@ export class DashboardPage implements OnInit, OnDestroy {
       if (userProfile) {
         this.isEdit = true;
         this.userProfileId = userProfile.id;
+        this.userName = userProfile.userName;
       } else {
         this.isEdit = false;
       }
@@ -104,7 +106,7 @@ export class DashboardPage implements OnInit, OnDestroy {
           this.unit = updatedSetting.unit;
 
           return histories.map((history) => {
-            return convertWeight(history, updatedSetting, this.kilogramsUSAValues, true);
+            return convertHistoryWeight(history, updatedSetting, this.kilogramsUSAValues, true);
           });
         }),
       )
