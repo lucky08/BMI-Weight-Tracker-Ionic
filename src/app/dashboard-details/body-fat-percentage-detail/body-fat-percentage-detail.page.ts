@@ -40,7 +40,7 @@ addIcons({
 })
 export class BodyFatPercentageDetailPage implements OnInit {
   menBFP = [
-    { category: 'Essential fat', percentage: '2-5%' },
+    { category: 'Essential Fat', percentage: '2-5%' },
     { category: 'Athletes', percentage: '6-13%' },
     { category: 'Fitness', percentage: '14-17%' },
     { category: 'Average', percentage: '18-24%' },
@@ -48,7 +48,7 @@ export class BodyFatPercentageDetailPage implements OnInit {
   ];
 
   womenBFP = [
-    { category: 'Essential fat', percentage: '10-13%' },
+    { category: 'Essential Fat', percentage: '10-13%' },
     { category: 'Athletes', percentage: '14-20%' },
     { category: 'Fitness', percentage: '21-24%' },
     { category: 'Average', percentage: '25-31%' },
@@ -56,14 +56,14 @@ export class BodyFatPercentageDetailPage implements OnInit {
   ];
 
   boysBFP = [
-    { category: 'Essential fat', percentage: '6-8%' },
+    { category: 'Essential Fat', percentage: '6-8%' },
     { category: 'Healthy Range', percentage: '11-25%' },
     { category: 'Overfat', percentage: '25-30%' },
     { category: 'Obese', percentage: 'Above 30%' },
   ];
 
   girlsBFP = [
-    { category: 'Essential fat', percentage: '12-15%' },
+    { category: 'Essential Fat', percentage: '12-15%' },
     { category: 'Healthy Range', percentage: '16-30%' },
     { category: 'Overfat', percentage: '31-35%' },
     { category: 'Obese', percentage: 'Above 35%' },
