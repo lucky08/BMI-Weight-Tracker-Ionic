@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo Installing dependencies...
+      - npm install -g @angular/cli
+      - npm install
+  build:
+    commands:
+      - echo Building Angular app...
+      - ng build --configuration=production --output-path=dist
+  post_build:
+    commands:
+      - echo Uploading files to S3...
+      - aws s3 sync dist/ s3://bmi-weight-tracker-ionic-demo --delete
+
+artifacts:
+  files:
+    - '**/*'
