@@ -1,5 +1,5 @@
-<ion-content *ngIf="histories && histories.length > 0 else noProgressChart">
-  <ion-header>
+<ion-content fullscreen *ngIf="histories && histories.length > 0 else noProgressChart">
+  <ion-header class="fixed-header">
     <ion-toolbar>
       <ion-segment (ionChange)="updateSegment($event)">
         <ion-segment-button
@@ -13,7 +13,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-tabs>
+  <ion-tabs class="tabs-container">
     <ion-tab-bar slot="top">
       <ion-tab-button tab="weight" (click)="setSelectedTab('weight')">
         <ion-label>Weight</ion-label>

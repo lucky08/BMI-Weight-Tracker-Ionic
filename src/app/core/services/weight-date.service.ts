@@ -11,7 +11,7 @@ export class WeightDateService {
   constructor(private http: HttpClient) {}
 
   getAllByUserProfileId(userProfileId: number) {
-    return this.http.get<WeightDate[]>(`${BACKEND_URL}/weight-date/${userProfileId}`).pipe(take(1));
+    return this.http.get<WeightDate[]>(`${BACKEND_URL}/weight-date/all/${userProfileId}`).pipe(take(1));
   }
 
   save(weightDate: WeightDate) {
