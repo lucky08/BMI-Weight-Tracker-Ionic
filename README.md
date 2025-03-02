@@ -54,8 +54,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Live Demo
 
 Try the BMI Weight Tracker application here:
-
-[Live Demo](http://bmi-weight-tracker-ionic-demo.s3-website.us-east-2.amazonaws.com/tabs/dashboard)
+🔗 [Live Demo](http://bmi-weight-tracker-ionic-demo.s3-website.us-east-2.amazonaws.com)
 
 _Note: This is a demo version hosted on AWS S3. Some features may be limited._
+
 
