@@ -50,3 +50,12 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Live Demo
+
+Try the BMI Weight Tracker application here:
+
+[Live Demo](http://bmi-weight-tracker-ionic-demo.s3-website.us-east-2.amazonaws.com/tabs/dashboard)
+
+_Note: This is a demo version hosted on AWS S3. Some features may be limited._
+
