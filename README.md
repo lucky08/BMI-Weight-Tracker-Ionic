@@ -51,9 +51,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
-## Live Demo
+## App Store
 
-Try the BMI Weight Tracker application here:
-🔗 [Live Demo](https://d5gktiqusdrxm.cloudfront.net)
-
-_Note: This is a demo version hosted on AWS S3. Some features may be limited._
+Available now on the App Store
+🔗 [Download on the App Store](https://apps.apple.com/us/app/bmi-weight-assistant/id6744826724)
